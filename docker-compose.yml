@@ -1,19 +1,19 @@
 version: "3.8"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-chat
+  # Serviço para o PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: postgres-chat
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: chat_auth
-      MYSQL_USER: chatuser
-      MYSQL_PASSWORD: chatpass
+      POSTGRES_DB: chat_auth
+      POSTGRES_USER: chatuser
+      POSTGRES_PASSWORD: chatpass
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
 
   mongo:
     image: mongo:6
@@ -29,16 +29,21 @@ services:
     container_name: chat-app
     restart: always
     depends_on:
-      - mysql
+      - postgres
       - mongo
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/chat_auth
+      # Novas configurações para o PostgreSQL
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chat_auth
       SPRING_DATASOURCE_USERNAME: chatuser
       SPRING_DATASOURCE_PASSWORD: chatpass
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/chat_messages
     ports:
       - "8080:8080"
+    volumes:
+      - .:/app
+    command: >
+      bash -c "mvn spring-boot:run"
 
 volumes:
-  mysql_data:
+  postgres_data:
   mongo_data:
