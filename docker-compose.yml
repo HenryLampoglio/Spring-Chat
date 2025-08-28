@@ -29,7 +29,7 @@ services:
     container_name: chat-app
     restart: always
     depends_on:
-      - postgres # Mudamos aqui para o novo serviço 'postgres'
+      - postgres
       - mongo
     environment:
       # Novas configurações para o PostgreSQL
@@ -39,7 +39,11 @@ services:
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/chat_messages
     ports:
       - "8080:8080"
+    volumes:
+      - .:/app
+    command: >
+      bash -c "mvn spring-boot:run"
 
 volumes:
-  postgres_data: # Novo volume para o PostgreSQL
+  postgres_data:
   mongo_data:

@@ -4,7 +4,6 @@ package com.example.SpringChat.core;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

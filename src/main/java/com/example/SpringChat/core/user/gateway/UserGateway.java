@@ -15,6 +15,4 @@ public interface UserGateway {
     User save(User user);
 
     Optional<User> findByEmail(String email);
-
-    List<User> findFriendsByUserId(UUID userId);
 }
