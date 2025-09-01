@@ -3,7 +3,7 @@ package com.example.SpringChat.application.user.usecase;
 import com.example.SpringChat.application.user.command.CreateUserCommand;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.core.user.entity.User;
-import com.example.SpringChat.core.user.excepetion.UserEmailAlreadyExistsException;
+import com.example.SpringChat.core.user.exception.UserEmailAlreadyExistsException;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -22,7 +22,7 @@ public class CreateUserUseCase implements CreateUserInputPort {
     @Override
     public User execute(CreateUserCommand command) {
         if (userGateway.existsByEmail(command.email())) {
-                throw new  UserEmailAlreadyExistsException("O e-mail" + command.email() + " Já está em uso.");
+                throw new  UserEmailAlreadyExistsException("O e-mail " + command.email() + " Já está em uso.");
             }
 
         int publicIdentificationKey;

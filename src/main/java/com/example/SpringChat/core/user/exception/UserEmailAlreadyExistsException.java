@@ -1,4 +1,4 @@
-package com.example.SpringChat.core.user.excepetion;
+package com.example.SpringChat.core.user.exception;
 
 public class UserEmailAlreadyExistsException extends RuntimeException {
 

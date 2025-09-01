@@ -1,8 +1,11 @@
 package com.example.SpringChat.infrastructure.configuration;
 
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
+import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.usecase.CreateUserUseCase;
+import com.example.SpringChat.application.user.usecase.LoginUseCase;
 import com.example.SpringChat.core.user.gateway.UserGateway;
+import com.example.SpringChat.infrastructure.security.TokenService;
 import com.example.SpringChat.infrastructure.user.adapter.persistence.UserGatewayAdapter;
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
 import org.springframework.context.annotation.Bean;
@@ -32,5 +35,10 @@ public class AppConfig {
     @Bean
     public CreateUserInputPort createUserInputPort(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder) {
         return new CreateUserUseCase(userGateway, passwordEncoder);
+    }
+
+    @Bean
+    public LoginInputPort loginInputPort(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder, TokenService tokenService){
+        return new LoginUseCase(userGateway, passwordEncoder, tokenService);
     }
 }
