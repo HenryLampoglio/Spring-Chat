@@ -32,7 +32,6 @@ services:
       - postgres
       - mongo
     environment:
-      # Novas configurações para o PostgreSQL
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chat_auth
       SPRING_DATASOURCE_USERNAME: chatuser
       SPRING_DATASOURCE_PASSWORD: chatpass
@@ -41,8 +40,10 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
+    # ---- Linha corrigida aqui ----
     command: >
-      bash -c "mvn spring-boot:run"
+      bash -c "mvn spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.address=0.0.0.0'"
+    # ---- Fim da correção ----
 
 volumes:
   postgres_data:

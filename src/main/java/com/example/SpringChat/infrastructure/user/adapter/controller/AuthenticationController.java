@@ -5,16 +5,15 @@ import com.example.SpringChat.application.user.command.LoginCommand;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.core.user.entity.User;
+import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesException;
+import com.example.SpringChat.core.user.exception.UserEmailNotFoundException;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.CreateUserRequest;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.CreateUserResponse;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.LoginRequest;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth")
@@ -49,8 +48,8 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
         LoginCommand command = new LoginCommand(
-                request.getEmail(),
-                request.getPassword()
+            request.getEmail(),
+            request.getPassword()
         );
         String loggedUser = loginInputPort.execute(command);
         LoginResponse response = new LoginResponse(loggedUser);
