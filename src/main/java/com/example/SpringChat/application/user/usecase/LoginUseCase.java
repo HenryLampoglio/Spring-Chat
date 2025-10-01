@@ -7,6 +7,7 @@ import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesExceptio
 import com.example.SpringChat.core.user.exception.UserEmailNotFoundException;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
+import com.example.SpringChat.infrastructure.user.adapter.controller.dto.LoginResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class LoginUseCase implements LoginInputPort {
@@ -21,7 +22,7 @@ public class LoginUseCase implements LoginInputPort {
     }
 
     @Override
-    public String execute(LoginCommand command) {
+    public LoginResponse execute(LoginCommand command) {
         User user = userGateway.findByEmail(command.Email()).
                 orElseThrow(() ->new UserEmailNotFoundException("Usuário não encontrado"));
 
@@ -29,6 +30,13 @@ public class LoginUseCase implements LoginInputPort {
 
         if(!passwordMatches) throw new PasswordsDoesntMatchesException("Senha Incorreta.");
 
-        return tokenService.generateToken(user);
+        LoginResponse.UserData userDataDTO = new LoginResponse.UserData(
+                user.getEmail(),
+                user.getNickname(),
+                user.getPublicIdentificationKey()
+        );
+
+        String userToken = tokenService.generateToken(user);
+        return new LoginResponse(userToken, userDataDTO);
     }
 }

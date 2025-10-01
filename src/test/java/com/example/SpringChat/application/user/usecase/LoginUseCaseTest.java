@@ -6,6 +6,7 @@ import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesExceptio
 import com.example.SpringChat.core.user.exception.UserEmailNotFoundException;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
+import com.example.SpringChat.infrastructure.user.adapter.controller.dto.LoginResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,10 +57,10 @@ class LoginUseCaseTest {
         Mockito.when(tokenService.generateToken(foundUser))
                 .thenReturn("generated-jwt-token");
 
-        String userToken = useCase.execute(command);
+        LoginResponse userAuth = useCase.execute(command);
 
-        Assertions.assertNotNull(userToken);
-        Assertions.assertEquals("generated-jwt-token", userToken);
+        Assertions.assertNotNull(userAuth);
+        Assertions.assertEquals("generated-jwt-token", userAuth.getToken());
 
         Mockito.verify(userGateway, Mockito.times(1)).findByEmail(any());
     }

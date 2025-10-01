@@ -51,8 +51,8 @@ public class AuthenticationController {
             request.getEmail(),
             request.getPassword()
         );
-        String loggedUser = loginInputPort.execute(command);
-        LoginResponse response = new LoginResponse(loggedUser);
+        LoginResponse loggedUser = loginInputPort.execute(command);
+        LoginResponse response = new LoginResponse(loggedUser.getToken(), loggedUser.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
