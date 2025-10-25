@@ -1,7 +1,4 @@
-version: "3.8"
-
 services:
-
   postgres:
     image: postgres:15
     container_name: postgres-chat
@@ -43,8 +40,7 @@ services:
     volumes:
       - .:/app
     command: >
-      bash -c "mvn spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.address=0.0.0.0'"
-
+      bash -c "mvn compile && mvn spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.address=0.0.0.0'"
 volumes:
   postgres_data:
   cassandra_data:

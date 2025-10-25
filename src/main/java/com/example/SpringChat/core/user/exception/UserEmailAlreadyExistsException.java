@@ -1,7 +1,10 @@
 package com.example.SpringChat.core.user.exception;
 
-public class UserEmailAlreadyExistsException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class UserEmailAlreadyExistsException extends RuntimeException {
     public UserEmailAlreadyExistsException(String message) {
         super(message);
     }
