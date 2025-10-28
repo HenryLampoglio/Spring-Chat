@@ -32,16 +32,10 @@ public class UserEntity extends AbstractEntity<UUID> implements UserDetails {
     @Column(name = "password_hash") // Renomeado para clareza
     private String hashedPassword;
 
+    @NotBlank
     private Integer publicIdentificationKey;
-    private String userQuote;
 
-    @ManyToMany(fetch = FetchType.LAZY) // EAGER pode causar problemas de performance
-    @JoinTable(
-            name = "user_connections",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id") // Nome corrigido
-    )
-    private Set<UserEntity> friends = new HashSet<>();
+    private String userQuote;
 
     public UserEntity(User user){
         this.nickname = user.getNickname();
