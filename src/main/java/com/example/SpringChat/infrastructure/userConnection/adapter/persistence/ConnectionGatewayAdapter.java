@@ -24,6 +24,8 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
 
     // finalizar isso na branch de casa
     public List<Connection> findAllByFriendIdWithUsers(UUID userId){
-        return springConnectionRepository.findAllByFriendIdWithUsers(userId);
+        List<ConnectionEntity> entityList= springConnectionRepository.findAllByFriendIdWithUsers(userId);
+
+        return entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
     }
 }
