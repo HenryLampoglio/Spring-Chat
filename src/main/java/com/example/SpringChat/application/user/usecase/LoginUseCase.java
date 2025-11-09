@@ -7,7 +7,7 @@ import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesExceptio
 import com.example.SpringChat.core.user.exception.UserEmailNotFoundException;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
-import com.example.SpringChat.infrastructure.user.adapter.controller.dto.LoginResponse;
+import com.example.SpringChat.infrastructure.user.adapter.controller.dto.authentication.LoginResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class LoginUseCase implements LoginInputPort {

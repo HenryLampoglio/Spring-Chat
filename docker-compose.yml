@@ -38,9 +38,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - .:/app
-    command: >
-      bash -c "mvn compile && mvn spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.address=0.0.0.0'"
+      - ./target/classes:/app/BOOT-INF/classes
 volumes:
   postgres_data:
   cassandra_data:

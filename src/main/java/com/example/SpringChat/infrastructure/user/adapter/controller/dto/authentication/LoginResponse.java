@@ -1,4 +1,4 @@
-package com.example.SpringChat.infrastructure.user.adapter.controller.dto;
+package com.example.SpringChat.infrastructure.user.adapter.controller.dto.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

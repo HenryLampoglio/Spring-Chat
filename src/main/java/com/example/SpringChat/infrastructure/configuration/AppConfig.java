@@ -2,8 +2,10 @@ package com.example.SpringChat.infrastructure.configuration;
 
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
+import com.example.SpringChat.application.user.port.SearchUsersInputPort;
 import com.example.SpringChat.application.user.usecase.CreateUserUseCase;
 import com.example.SpringChat.application.user.usecase.LoginUseCase;
+import com.example.SpringChat.application.user.usecase.SearchUsersUseCase;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
 import com.example.SpringChat.infrastructure.user.adapter.persistence.UserGatewayAdapter;
@@ -41,4 +43,10 @@ public class AppConfig {
     public LoginInputPort loginInputPort(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder, TokenService tokenService){
         return new LoginUseCase(userGateway, passwordEncoder, tokenService);
     }
+
+    @Bean
+    public SearchUsersInputPort searchUsersInputPort(UserGateway userGateway){
+        return new SearchUsersUseCase(userGateway);
+    }
+
 }

@@ -4,8 +4,10 @@ import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,6 +38,12 @@ public class UserGatewayAdapter implements UserGateway {
     @Override
     public Optional<User> findByEmail(String email) {
         return springUserRepository.findByEmail(email).map(UserEntity::toCoreUser);
+    }
+
+    public List<User> findTop10NicknameContainingAndPublicIdentificationKeyContaining(String nickname, String publicIdentificationKey){
+        List<UserEntity> entityList = springUserRepository.findTop10NicknameContainingAndPublicIdentificationKeyContaining(nickname, publicIdentificationKey, PageRequest.of(0,10));
+
+        return entityList.stream().map(UserEntity::toCoreUser).toList();
     }
 
 }
