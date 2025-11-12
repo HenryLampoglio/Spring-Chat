@@ -17,7 +17,7 @@ public class SearchUsersUseCase implements SearchUsersInputPort {
     @Override
     public List<User> execute(SearchUsersCommand command) {
         String nickname = command.getNicknamePart();
-        String publicIdentificationKey = command.getKeyPart();
+        int publicIdentificationKey = command.getKeyPart();
 
         return userGateway.findTop10NicknameContainingAndPublicIdentificationKeyContaining(nickname, publicIdentificationKey);
     }

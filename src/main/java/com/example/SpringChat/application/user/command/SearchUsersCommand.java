@@ -9,12 +9,12 @@ public class SearchUsersCommand {
 
     public String getNicknamePart(){
         int index = getSeparatorIndex();
-        return (index == -1) ? "" : this.userIdentifier.substring(0, index);
+        return (index == -1) ? this.userIdentifier : this.userIdentifier.substring(0, index);
     }
 
-    public String getKeyPart(){
+    public Integer getKeyPart(){
         int index = getSeparatorIndex();
-        return (index == -1) ? "": this.userIdentifier.substring(index + 1);
+        return (index == -1) ? 0: Integer.parseInt(this.userIdentifier.substring(index + 1));
     }
 
     private int getSeparatorIndex() {

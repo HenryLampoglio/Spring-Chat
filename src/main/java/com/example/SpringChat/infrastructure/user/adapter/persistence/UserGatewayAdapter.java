@@ -40,7 +40,7 @@ public class UserGatewayAdapter implements UserGateway {
         return springUserRepository.findByEmail(email).map(UserEntity::toCoreUser);
     }
 
-    public List<User> findTop10NicknameContainingAndPublicIdentificationKeyContaining(String nickname, String publicIdentificationKey){
+    public List<User> findTop10NicknameContainingAndPublicIdentificationKeyContaining(String nickname, int publicIdentificationKey){
         List<UserEntity> entityList = springUserRepository.findTop10NicknameContainingAndPublicIdentificationKeyContaining(nickname, publicIdentificationKey, PageRequest.of(0,10));
 
         return entityList.stream().map(UserEntity::toCoreUser).toList();

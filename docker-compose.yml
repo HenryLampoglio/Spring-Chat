@@ -20,25 +20,6 @@ services:
       - "9042:9042"
     volumes:
       - cassandra_data:/var/lib/cassandra
-
-  app:
-    build: .
-    container_name: chat-app
-    restart: always
-    depends_on:
-      - postgres
-      - cassandra
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chat_auth
-      SPRING_DATASOURCE_USERNAME: chatuser
-      SPRING_DATASOURCE_PASSWORD: chatpass
-      SPRING_DATA_CASSANDRA_CONTACT_POINTS: cassandra # Nova variável para o Cassandra
-      SPRING_DATA_CASSANDRA_PORT: 9042
-      SPRING_DATA_CASSANDRA_KEYSPACE_NAME: chat_messages
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./target/classes:/app/BOOT-INF/classes
 volumes:
   postgres_data:
   cassandra_data:
