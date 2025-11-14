@@ -19,9 +19,11 @@ public interface SpringUserRepository extends JpaRepository<UserEntity, UUID> {
 
     @Query("Select u FROM UserEntity u WHERE " +
         "(:nickname = '' OR u.nickname LIKE CONCAT('%', :nickname, '%')) AND " +
-        "(:publicIdentificationKey = 0 OR u.publicIdentificationKey = :publicIdentificationKey)")
+        "(:publicIdentificationKey = 0 OR u.publicIdentificationKey = :publicIdentificationKey) AND " +
+        "u.id != :userId")
     List<UserEntity> findTop10NicknameContainingAndPublicIdentificationKeyContaining(
             @Param("nickname") String nickname,
             @Param("publicIdentificationKey") int publicIdentificationKey,
+            @Param("userId") UUID userId,
             Pageable pageable);
 }

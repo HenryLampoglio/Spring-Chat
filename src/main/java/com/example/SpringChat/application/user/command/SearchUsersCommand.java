@@ -1,10 +1,17 @@
 package com.example.SpringChat.application.user.command;
 
+import lombok.Getter;
+
+import java.util.UUID;
+
 public class SearchUsersCommand {
     private final String userIdentifier;
+    @Getter
+    private final UUID userId;
 
-    public SearchUsersCommand(String userIdentifier){
+    public SearchUsersCommand(String userIdentifier, UUID userId){
         this.userIdentifier = userIdentifier;
+        this.userId = userId;
     }
 
     public String getNicknamePart(){

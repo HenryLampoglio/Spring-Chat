@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class UserGatewayAdapter implements UserGateway {
@@ -40,8 +41,8 @@ public class UserGatewayAdapter implements UserGateway {
         return springUserRepository.findByEmail(email).map(UserEntity::toCoreUser);
     }
 
-    public List<User> findTop10NicknameContainingAndPublicIdentificationKeyContaining(String nickname, int publicIdentificationKey){
-        List<UserEntity> entityList = springUserRepository.findTop10NicknameContainingAndPublicIdentificationKeyContaining(nickname, publicIdentificationKey, PageRequest.of(0,10));
+    public List<User> findTop10NicknameContainingAndPublicIdentificationKeyContaining(String nickname, int publicIdentificationKey, UUID userId){
+        List<UserEntity> entityList = springUserRepository.findTop10NicknameContainingAndPublicIdentificationKeyContaining(nickname, publicIdentificationKey, userId,PageRequest.of(0,10));
 
         return entityList.stream().map(UserEntity::toCoreUser).toList();
     }
