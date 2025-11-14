@@ -29,7 +29,6 @@ public class UserController {
             @AuthenticationPrincipal UserEntity user
     )
     {
-        System.out.println(user.getId());
         SearchUsersCommand command = new SearchUsersCommand(userIdentifier, user.getId());
         List<User> foundUsers = searchUsersInputPort.execute(command);
         UserSearchResponse response = new UserSearchResponse(
