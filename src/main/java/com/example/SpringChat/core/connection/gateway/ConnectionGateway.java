@@ -17,5 +17,5 @@ public interface ConnectionGateway {
 
     List<Connection> findAllByFriendIdWithUsers(UUID userId);
 
-    List<Connection> findAllByUserIdAndStatusWithUsers(UUID userId, UUID friendId,String connectionStatus);
+    List<Connection> findAllByUserIdAndStatusWithUsers(UUID userId);
 }

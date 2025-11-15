@@ -1,18 +1,27 @@
 package com.example.SpringChat.infrastructure.configuration;
 
+import com.example.SpringChat.application.connection.command.UserFriendsCommand;
+import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
+import com.example.SpringChat.application.connection.usecase.SearchUserFriendsUseCase;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.port.SearchUsersInputPort;
 import com.example.SpringChat.application.user.usecase.CreateUserUseCase;
 import com.example.SpringChat.application.user.usecase.LoginUseCase;
 import com.example.SpringChat.application.user.usecase.SearchUsersUseCase;
+import com.example.SpringChat.core.connection.entity.Connection;
+import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
 import com.example.SpringChat.infrastructure.user.adapter.persistence.UserGatewayAdapter;
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
+import com.example.SpringChat.infrastructure.userConnection.adapter.persistence.ConnectionGatewayAdapter;
+import com.example.SpringChat.infrastructure.userConnection.persistence.repository.SpringConnectionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
 
 @Configuration
 public class AppConfig {
@@ -28,8 +37,12 @@ public class AppConfig {
     // Spring injeta o SpringUserRepository aqui.
     @Bean
     public UserGateway userGateway(SpringUserRepository springUserRepository) {
-        return new UserGatewayAdapter(springUserRepository) {
-        };
+        return new UserGatewayAdapter(springUserRepository) {};
+    }
+
+    @Bean
+    public ConnectionGateway connectionGateway(SpringConnectionRepository springConnectionRepository){
+        return new ConnectionGatewayAdapter(springConnectionRepository){};
     }
 
     // 3. Cria a instância do UseCase
@@ -49,4 +62,8 @@ public class AppConfig {
         return new SearchUsersUseCase(userGateway);
     }
 
+    @Bean
+    public UserFriendsInputPort userFriendsInputPort(ConnectionGateway connectionGateway){
+        return new SearchUserFriendsUseCase(connectionGateway);
+    }
 }

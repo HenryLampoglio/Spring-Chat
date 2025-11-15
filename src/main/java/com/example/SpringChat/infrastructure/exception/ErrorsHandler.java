@@ -1,5 +1,6 @@
 package com.example.SpringChat.infrastructure.exception;
 
+import com.example.SpringChat.core.connection.exception.ConnectionsNotFoundException;
 import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesException;
 import com.example.SpringChat.core.user.exception.UserEmailAlreadyExistsException;
 import com.example.SpringChat.core.user.exception.UserEmailNotFoundException;
@@ -47,5 +48,16 @@ public class ErrorsHandler {
         body.put("path", request.getDescription(false).replace("uri=", ""));
 
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ConnectionsNotFoundException.class)
+    public ResponseEntity<Object> handleConnectionsNotFoundException(ConnectionsNotFoundException exception, WebRequest request){
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("message", exception.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 }

@@ -7,6 +7,7 @@ import com.example.SpringChat.infrastructure.userConnection.persistence.reposito
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ConnectionGatewayAdapter implements ConnectionGateway {
@@ -22,10 +23,25 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
         return savedEntity.toCoreConnection();
     }
 
+    @Override
+    public Optional<Connection> findById(UUID id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Connection> findAllByUserIdWithUsers(UUID userId) {
+        return List.of();
+    }
+
     // finalizar isso na branch de casa
     public List<Connection> findAllByFriendIdWithUsers(UUID userId){
         List<ConnectionEntity> entityList= springConnectionRepository.findAllByFriendIdWithUsers(userId);
 
         return entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
+    }
+
+    @Override
+    public List<Connection> findAllByUserIdAndStatusWithUsers(UUID userId) {
+        return List.of();
     }
 }
