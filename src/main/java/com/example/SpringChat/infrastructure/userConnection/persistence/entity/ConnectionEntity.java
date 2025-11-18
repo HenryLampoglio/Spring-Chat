@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -33,7 +35,9 @@ public class ConnectionEntity extends AbstractEntity<UUID> {
     private UserEntity friend;
 
     @NotBlank
+    @Column(name = "connection_status", columnDefinition = "conn_type")
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private ConnectionStatus connectionStatus;
 
     public ConnectionEntity(Connection connection){
@@ -49,7 +53,7 @@ public class ConnectionEntity extends AbstractEntity<UUID> {
         coreConnection.setConnectionStatus(this.connectionStatus);
 
         if(this.user != null) coreConnection.setUser((this.user.toCoreUser()));
-        if(this.friend != null) coreConnection.setUser((this.friend.toCoreUser()));
+        if(this.friend != null) coreConnection.setFriend((this.friend.toCoreUser()));
 
         return coreConnection;
     }

@@ -15,13 +15,13 @@ import java.util.UUID;
 @Repository
 public interface SpringConnectionRepository extends JpaRepository<ConnectionEntity, UUID> {
 
-    @Query(value = "SELECT c FROM ConnectionEntity c " +
+    @Query(value = "SELECT DISTINCT c FROM ConnectionEntity c " +
             "LEFT JOIN FETCH c.user " +
             "LEFT JOIN FETCH c.friend " +
-            "WHERE c.user.id = :userId OR c.friend.id = :userId",
+            "WHERE c.user.id = :userId OR c.friend.id = :userId AND c.connectionStatus = :connectionAccepted",
             countQuery = "SELECT count(c) FROM ConnectionEntity c " +
                     "WHERE c.user.id = :userId OR c.friend.id = :userId")
-    Page<ConnectionEntity> findAllByUserIdOrFriendIdWithUsers(@Param("userId") UUID userId, Pageable pageable);
+    Page<ConnectionEntity> findAllByUserIdOrFriendIdWithUsers(@Param("connectionAccepted") ConnectionStatus status,@Param("userId") UUID userId, Pageable pageable);
 
     @Query("SELECT c FROM ConnectionEntity c " +
             "LEFT JOIN FETCH c.user " +

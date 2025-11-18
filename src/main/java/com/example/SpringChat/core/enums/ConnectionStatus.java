@@ -3,16 +3,10 @@ package com.example.SpringChat.core.enums;
 import com.example.SpringChat.core.connection.entity.Connection;
 import lombok.Getter;
 
-@Getter
+import java.util.Locale;
+
 public enum ConnectionStatus {
-    ACCEPTED("accepted"),
-    PENDING("pending"),
-    BLOCKED("blocked");
-
-    private final String value;
-
-    ConnectionStatus(String value){
-        this.value = value;
-    }
-
+    accepted,
+    pending,
+    blocked;
 }

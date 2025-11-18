@@ -1,7 +1,8 @@
 package com.example.SpringChat.core.connection.gateway;
 
+import com.example.SpringChat.application.shared.response.PaginationResponse;
 import com.example.SpringChat.core.connection.entity.Connection;
-import com.example.SpringChat.core.pagination.Pagination;
+import com.example.SpringChat.application.shared.request.PaginationRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,7 @@ public interface ConnectionGateway {
 
     List<Connection> findAllByUserIdWithUsers(UUID userId);
 
-    List<Connection> findAllByUserIdOrFriendIdWithUsers(UUID userId, Pagination pagination);
+    PaginationResponse<Connection> findAllByUserIdOrFriendIdWithUsers(UUID userId, PaginationRequest paginationRequest);
 
     List<Connection> findAllByUserIdAndStatusWithUsers(UUID userId);
 }

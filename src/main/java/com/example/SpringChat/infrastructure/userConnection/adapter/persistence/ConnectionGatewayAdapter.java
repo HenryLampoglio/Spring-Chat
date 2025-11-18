@@ -1,11 +1,12 @@
 package com.example.SpringChat.infrastructure.userConnection.adapter.persistence;
 
+import com.example.SpringChat.application.shared.response.PaginationResponse;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
-import com.example.SpringChat.core.pagination.Pagination;
+import com.example.SpringChat.application.shared.request.PaginationRequest;
+import com.example.SpringChat.core.enums.ConnectionStatus;
 import com.example.SpringChat.infrastructure.userConnection.persistence.entity.ConnectionEntity;
 import com.example.SpringChat.infrastructure.userConnection.persistence.repository.SpringConnectionRepository;
-import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,13 +38,19 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
         return List.of();
     }
 
-    public List<Connection> findAllByUserIdOrFriendIdWithUsers(UUID userId, Pagination pagination){
+    public PaginationResponse<Connection> findAllByUserIdOrFriendIdWithUsers(UUID userId, PaginationRequest paginationRequest){
 
-        Pageable springPageable = PageRequest.of(pagination.getPage(), pagination.getSize());
+        Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
 
-        Page<ConnectionEntity> entityList = springConnectionRepository.findAllByUserIdOrFriendIdWithUsers(userId,springPageable);
+        Page<ConnectionEntity> entityList = springConnectionRepository.findAllByUserIdOrFriendIdWithUsers(ConnectionStatus.accepted, userId, springPageable);
 
-        return entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
+        List<Connection> connectionsCore = entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
+
+        return new PaginationResponse<>(
+            connectionsCore,
+            entityList.getTotalElements(),
+            entityList.getTotalPages()
+        );
     }
 
     @Override
