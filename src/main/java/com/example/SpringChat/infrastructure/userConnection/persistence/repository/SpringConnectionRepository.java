@@ -1,25 +1,27 @@
 package com.example.SpringChat.infrastructure.userConnection.persistence.repository;
 
-import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.enums.ConnectionStatus;
 import com.example.SpringChat.infrastructure.userConnection.persistence.entity.ConnectionEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface SpringConnectionRepository extends JpaRepository<ConnectionEntity, UUID> {
 
-    @Query("SELECT c FROM ConnectionEntity c " +
+    @Query(value = "SELECT c FROM ConnectionEntity c " +
             "LEFT JOIN FETCH c.user " +
             "LEFT JOIN FETCH c.friend " +
-            "WHERE c.user.id = :userId")
-    List<ConnectionEntity> findAllByUserIdWithUsers(@Param("userId") UUID userId);
+            "WHERE c.user.id = :userId OR c.friend.id = :userId",
+            countQuery = "SELECT count(c) FROM ConnectionEntity c " +
+                    "WHERE c.user.id = :userId OR c.friend.id = :userId")
+    Page<ConnectionEntity> findAllByUserIdOrFriendIdWithUsers(@Param("userId") UUID userId, Pageable pageable);
 
     @Query("SELECT c FROM ConnectionEntity c " +
             "LEFT JOIN FETCH c.user " +

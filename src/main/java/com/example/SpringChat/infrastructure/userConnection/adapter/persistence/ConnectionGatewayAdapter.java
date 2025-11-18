@@ -2,9 +2,13 @@ package com.example.SpringChat.infrastructure.userConnection.adapter.persistence
 
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.core.pagination.Pagination;
 import com.example.SpringChat.infrastructure.userConnection.persistence.entity.ConnectionEntity;
 import com.example.SpringChat.infrastructure.userConnection.persistence.repository.SpringConnectionRepository;
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,9 +37,11 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
         return List.of();
     }
 
-    // finalizar isso na branch de casa
-    public List<Connection> findAllByFriendIdWithUsers(UUID userId){
-        List<ConnectionEntity> entityList= springConnectionRepository.findAllByFriendIdWithUsers(userId);
+    public List<Connection> findAllByUserIdOrFriendIdWithUsers(UUID userId, Pagination pagination){
+
+        Pageable springPageable = PageRequest.of(pagination.getPage(), pagination.getSize());
+
+        Page<ConnectionEntity> entityList = springConnectionRepository.findAllByUserIdOrFriendIdWithUsers(userId,springPageable);
 
         return entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
     }

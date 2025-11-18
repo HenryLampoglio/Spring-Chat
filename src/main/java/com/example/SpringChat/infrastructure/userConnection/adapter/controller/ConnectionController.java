@@ -4,8 +4,10 @@ package com.example.SpringChat.infrastructure.userConnection.adapter.controller;
 import com.example.SpringChat.application.connection.command.UserFriendsCommand;
 import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
 import com.example.SpringChat.core.connection.entity.Connection;
+import com.example.SpringChat.core.pagination.Pagination;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.userFriends.response.UserFriendsResponse;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,10 +28,12 @@ public class ConnectionController {
 
     @GetMapping("/friends")
     public ResponseEntity<UserFriendsResponse> userFriends(
-            @AuthenticationPrincipal UserEntity user
+            @AuthenticationPrincipal UserEntity user,
+            Pageable pageable
     )
     {
-        UserFriendsCommand command = new UserFriendsCommand(user.getId());
+        Pagination pagination = new Pagination(pageable.getPageNumber(), pageable.getPageSize());
+        UserFriendsCommand command = new UserFriendsCommand(user.getId(), pagination);
         List<Connection> foundConnections = userFriendsInputPort.execute(command);
         UserFriendsResponse response = new UserFriendsResponse(
             "All user connections retrieved",
