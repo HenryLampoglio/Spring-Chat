@@ -15,4 +15,6 @@ public interface UserGateway {
     User save(User user);
 
     Optional<User> findByEmail(String email);
+
+    List<User> findTop10NicknameContainingAndPublicIdentificationKeyContaining(String nickname,int publicIdentificationKey, UUID userId);
 }
