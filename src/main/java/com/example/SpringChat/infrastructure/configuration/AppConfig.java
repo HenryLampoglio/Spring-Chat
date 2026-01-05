@@ -1,15 +1,13 @@
 package com.example.SpringChat.infrastructure.configuration;
 
-import com.example.SpringChat.application.connection.command.UserFriendsCommand;
 import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
-import com.example.SpringChat.application.connection.usecase.SearchUserFriendsUseCase;
+import com.example.SpringChat.application.connection.usecase.RetrieveUserFriendsUseCase;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.port.SearchUsersInputPort;
 import com.example.SpringChat.application.user.usecase.CreateUserUseCase;
 import com.example.SpringChat.application.user.usecase.LoginUseCase;
 import com.example.SpringChat.application.user.usecase.SearchUsersUseCase;
-import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
@@ -20,8 +18,6 @@ import com.example.SpringChat.infrastructure.userConnection.persistence.reposito
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.List;
 
 @Configuration
 public class AppConfig {
@@ -64,6 +60,6 @@ public class AppConfig {
 
     @Bean
     public UserFriendsInputPort userFriendsInputPort(ConnectionGateway connectionGateway){
-        return new SearchUserFriendsUseCase(connectionGateway);
+        return new RetrieveUserFriendsUseCase(connectionGateway);
     }
 }
