@@ -17,4 +17,11 @@ public interface UserGateway {
     Optional<User> findByEmail(String email);
 
     List<User> findTop10NicknameContainingAndPublicIdentificationKeyContaining(String nickname,int publicIdentificationKey, UUID userId);
+
+    Boolean validatePassword(String password, String hashedPassword);
+
+    String generateAuthToken(User user);
+
+    String encodePassword(String password);
+
 }

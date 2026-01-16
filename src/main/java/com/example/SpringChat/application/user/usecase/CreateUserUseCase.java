@@ -12,11 +12,9 @@ import java.util.Random;
 public class CreateUserUseCase implements CreateUserInputPort {
     private final UserGateway userGateway;
     private final Random random = new Random();
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public CreateUserUseCase(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder) {
+    public CreateUserUseCase(UserGateway userGateway) {
         this.userGateway = userGateway;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -30,7 +28,7 @@ public class CreateUserUseCase implements CreateUserInputPort {
             publicIdentificationKey = random.nextInt(900000) + 100000;
         } while (userGateway.existsByPublicIdentificationKey(publicIdentificationKey));
 
-        String hashedPassword = passwordEncoder.encode(command.hashedPassword());
+        String hashedPassword = userGateway.encodePassword(command.hashedPassword());
 
         User newUser = new User(command.nickname(), command.email(), hashedPassword, publicIdentificationKey);
 

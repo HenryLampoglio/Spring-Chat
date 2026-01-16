@@ -22,18 +22,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class AppConfig {
 
-    // 1. Cria a instância do BCryptPasswordEncoder
-    // O BCryptPasswordEncoder é uma dependência externa que é usada pelo UseCase
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. Cria a instância do UserGateway (o adaptador)
-    // Spring injeta o SpringUserRepository aqui.
     @Bean
-    public UserGateway userGateway(SpringUserRepository springUserRepository) {
-        return new UserGatewayAdapter(springUserRepository) {};
+    public UserGateway userGateway(SpringUserRepository springUserRepository, BCryptPasswordEncoder passwordEncoder, TokenService tokenService) {
+        return new UserGatewayAdapter(springUserRepository, passwordEncoder, tokenService) {};
     }
 
     @Bean
@@ -41,16 +37,14 @@ public class AppConfig {
         return new ConnectionGatewayAdapter(springConnectionRepository){};
     }
 
-    // 3. Cria a instância do UseCase
-    // Spring injeta o UserGateway e o BCryptPasswordEncoder aqui.
     @Bean
-    public CreateUserInputPort createUserInputPort(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder) {
-        return new CreateUserUseCase(userGateway, passwordEncoder);
+    public CreateUserInputPort createUserInputPort(UserGateway userGateway) {
+        return new CreateUserUseCase(userGateway);
     }
 
     @Bean
-    public LoginInputPort loginInputPort(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder, TokenService tokenService){
-        return new LoginUseCase(userGateway, passwordEncoder, tokenService);
+    public LoginInputPort loginInputPort(UserGateway userGateway){
+        return new LoginUseCase(userGateway);
     }
 
     @Bean
