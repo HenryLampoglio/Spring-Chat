@@ -1,14 +1,19 @@
 package com.example.SpringChat.infrastructure.userConnection.adapter.controller;
 
 
+import com.example.SpringChat.application.connection.command.AcceptInviteCommand;
+import com.example.SpringChat.application.connection.command.CancelConnectionCommand;
 import com.example.SpringChat.application.connection.command.SendInviteCommand;
 import com.example.SpringChat.application.connection.command.UserFriendsCommand;
+import com.example.SpringChat.application.connection.port.CancelConnectionPort;
 import com.example.SpringChat.application.connection.port.SendInvitePort;
 import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
 import com.example.SpringChat.application.shared.response.PaginationResponse;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
+import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.acceptInvite.response.AcceptInviteResponse;
+import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.cancelConnection.response.CancelConnectionResponse;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.sendInvite.response.SendInviteResponse;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.userFriends.response.UserFriendsResponse;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,10 +30,12 @@ import java.util.UUID;
 public class ConnectionController {
     private final UserFriendsInputPort userFriendsInputPort;
     private final SendInvitePort sendInvitePort;
+    private final CancelConnectionPort cancelConnectionPort;
 
-    public ConnectionController(UserFriendsInputPort userFriendsInputPort, SendInvitePort sendInvitePort){
+    public ConnectionController(UserFriendsInputPort userFriendsInputPort, SendInvitePort sendInvitePort, CancelConnectionPort cancelConnectionPort){
         this.userFriendsInputPort = userFriendsInputPort;
         this.sendInvitePort = sendInvitePort;
+        this.cancelConnectionPort = cancelConnectionPort;
     }
 
     @GetMapping("/friends")
@@ -49,10 +55,9 @@ public class ConnectionController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/send-invite")
+    @PostMapping("/send-invite/{receiverId}")
     public ResponseEntity<SendInviteResponse> sendInvite(
-    @RequestParam(value = "receiverId", required = true)
-    UUID receiverId,
+    @PathVariable UUID receiverId,
     @AuthenticationPrincipal UserEntity requester
     )
     {
@@ -66,4 +71,30 @@ public class ConnectionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PatchMapping("/accept-invite/{id")
+    public ResponseEntity<AcceptInviteResponse> acceptInvite(
+            @PathVariable UUID id
+    )
+    {
+        AcceptInviteCommand command = new AcceptInviteCommand(id);
+        Connection connection = acceptInvitePort.execute(command);
+        AcceptInviteResponse response= new AcceptInviteResponse(
+                connection,
+                "Convite aceito"
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    @DeleteMapping("/cancel-connection/{id}")
+    public ResponseEntity<CancelConnectionResponse> cancelInvite(
+        @PathVariable UUID id
+    )
+    {
+        CancelConnectionCommand command = new CancelConnectionCommand(id);
+        cancelConnectionPort.execute(command);
+
+        return ResponseEntity.ok(new CancelConnectionResponse("Convite cancelado com sucesso.",true));
+    }
 }

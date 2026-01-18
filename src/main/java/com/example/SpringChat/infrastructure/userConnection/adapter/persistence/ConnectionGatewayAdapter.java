@@ -27,8 +27,8 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
     }
 
     @Override
-    public Optional<Connection> GetConnection(UUID id) {
-        return Optional.empty();
+    public Boolean connectionExists(UUID id){
+        return this.springConnectionRepository.existsById(id);
     }
 
     @Override
@@ -49,8 +49,8 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
     }
 
     @Override
-    public Void cancelInvite(UUID connectionId){
-        return null;
+    public void cancelConnection(UUID id){
+        this.springConnectionRepository.deleteById(id);
     }
 
     @Override
@@ -58,11 +58,6 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
 
     @Override
     public Void refuseInvite(UUID connectionId){ return null; }
-
-    @Override
-    public List<Connection> GetUserConnections(UUID userId) {
-        return List.of();
-    }
 
     @Override
     public PaginationResponse<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest){
