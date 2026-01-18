@@ -34,6 +34,11 @@ public class UserGatewayAdapter implements UserGateway {
     }
 
     @Override
+    public boolean userExists(UUID id){
+        return springUserRepository.existsById(id);
+    }
+
+    @Override
     public boolean existsByEmail(String email) {
         return springUserRepository.existsByEmail(email);
     }

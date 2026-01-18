@@ -18,8 +18,7 @@ public class LoginUseCase implements LoginInputPort {
     @Override
     public LoginResponse execute(LoginCommand command) {
         User user = userGateway.findByEmail(command.Email()).
-                orElseThrow(() ->new UserEmailNotFoundException("Usuário não encontrado"));
-
+                orElseThrow(() ->new UserEmailNotFoundException("Usuário com esse email não encontrado"));
         boolean passwordMatches = userGateway.validatePassword(command.password(), user.getHashedPassword());
 
         if(!passwordMatches) throw new PasswordsDoesntMatchesException("Senha Incorreta.");

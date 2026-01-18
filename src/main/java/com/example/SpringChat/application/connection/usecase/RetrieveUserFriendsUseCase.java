@@ -20,7 +20,7 @@ public class RetrieveUserFriendsUseCase implements UserFriendsInputPort {
         UUID userId = command.userId();
         PaginationRequest paginationRequest = command.paginationRequest();
 
-        PaginationResponse<Connection> connections = connectionGateway.findAllByUserIdOrFriendIdWithUsers(userId, paginationRequest);
+        PaginationResponse<Connection> connections = connectionGateway.searchUsers(userId, paginationRequest);
 
         if(connections.getItems().isEmpty()){
             throw new ConnectionsNotFoundException("This user didn't make any connections yet");

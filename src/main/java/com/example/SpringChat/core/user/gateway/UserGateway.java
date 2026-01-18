@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface UserGateway {
 
+    boolean userExists(UUID id);
+
     boolean existsByEmail(String email);
 
     boolean existsByPublicIdentificationKey(int publicIdentificationKey);

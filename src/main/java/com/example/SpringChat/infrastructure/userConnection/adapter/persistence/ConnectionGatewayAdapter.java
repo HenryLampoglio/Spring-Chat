@@ -5,6 +5,8 @@ import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
 import com.example.SpringChat.core.enums.ConnectionStatus;
+import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
+import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
 import com.example.SpringChat.infrastructure.userConnection.persistence.entity.ConnectionEntity;
 import com.example.SpringChat.infrastructure.userConnection.persistence.repository.SpringConnectionRepository;
 import org.springframework.data.domain.Page;
@@ -17,28 +19,53 @@ import java.util.UUID;
 
 public class ConnectionGatewayAdapter implements ConnectionGateway {
     private final SpringConnectionRepository springConnectionRepository;
+    private final SpringUserRepository springUserRepository;
 
-    public ConnectionGatewayAdapter(SpringConnectionRepository springConnectionRepository){
+    public ConnectionGatewayAdapter(SpringConnectionRepository springConnectionRepository, SpringUserRepository springUserRepository){
         this.springConnectionRepository = springConnectionRepository;
-    }
-
-    public Connection save(Connection connection){
-        ConnectionEntity connectionEntity = new ConnectionEntity(connection);
-        ConnectionEntity savedEntity = springConnectionRepository.save(connectionEntity);
-        return savedEntity.toCoreConnection();
+        this.springUserRepository = springUserRepository;
     }
 
     @Override
-    public Optional<Connection> findById(UUID id) {
+    public Optional<Connection> GetConnection(UUID id) {
         return Optional.empty();
     }
 
     @Override
-    public List<Connection> findAllByUserIdWithUsers(UUID userId) {
+    public Connection sendInvite(UUID requesterId,UUID receiverId,ConnectionStatus status){
+        ConnectionEntity rawEntity = new ConnectionEntity();
+
+        rawEntity.setConnectionStatus(status);
+
+        UserEntity requesterProxy = this.springUserRepository.getReferenceById(requesterId);
+        rawEntity.setRequester(requesterProxy);
+
+        UserEntity receiverProxy = this.springUserRepository.getReferenceById(receiverId);
+        rawEntity.setReceiver(receiverProxy);
+
+        ConnectionEntity entity = this.springConnectionRepository.save(rawEntity);
+
+        return entity.toCoreConnection();
+    }
+
+    @Override
+    public Void cancelInvite(UUID connectionId){
+        return null;
+    }
+
+    @Override
+    public Connection acceptInvite(UUID connectionId){ return new Connection(); }
+
+    @Override
+    public Void refuseInvite(UUID connectionId){ return null; }
+
+    @Override
+    public List<Connection> GetUserConnections(UUID userId) {
         return List.of();
     }
 
-    public PaginationResponse<Connection> findAllByUserIdOrFriendIdWithUsers(UUID userId, PaginationRequest paginationRequest){
+    @Override
+    public PaginationResponse<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest){
 
         Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
 

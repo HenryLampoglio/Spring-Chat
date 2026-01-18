@@ -43,7 +43,7 @@ class RetrieveUserFriendsUseCaseTest { // 2. RENAME this class (Added 'Test' suf
 
     @Test
     void shouldReturnFriendsSuccessfully() {
-        Mockito.when(connectionGateway.findAllByUserIdOrFriendIdWithUsers(any(), eq(paginationRequest)))
+        Mockito.when(connectionGateway.searchUsers(any(), eq(paginationRequest)))
                 .thenReturn(new PaginationResponse<>(
                         List.of(new Connection()),
                         1L,
@@ -53,7 +53,7 @@ class RetrieveUserFriendsUseCaseTest { // 2. RENAME this class (Added 'Test' suf
        PaginationResponse<Connection> response = useCase.execute(command);
 
         Assertions.assertNotNull(response.getItems());
-        Mockito.verify(connectionGateway, Mockito.times(1)).findAllByUserIdOrFriendIdWithUsers(any(), eq(paginationRequest));
+        Mockito.verify(connectionGateway, Mockito.times(1)).searchUsers(any(), eq(paginationRequest));
     }
 
 }

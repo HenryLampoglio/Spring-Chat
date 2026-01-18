@@ -7,6 +7,7 @@ import com.example.SpringChat.infrastructure.AbstractEntity;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,18 +24,18 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ConnectionEntity extends AbstractEntity<UUID> {
-    @NotBlank
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @JoinColumn(name = "requester_id")
+    private UserEntity requester;
 
 
-    @NotBlank
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_id")
-    private UserEntity friend;
+    @JoinColumn(name = "receiver_id")
+    private UserEntity receiver;
 
-    @NotBlank
+    @NotNull
     @Column(name = "connection_status", columnDefinition = "conn_type")
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
@@ -43,8 +44,8 @@ public class ConnectionEntity extends AbstractEntity<UUID> {
     public ConnectionEntity(Connection connection){
         this.id = connection.getId();
         this.connectionStatus = connection.getConnectionStatus();
-        this.user = mapUser(connection.getUser());
-        this.friend = mapUser(connection.getFriend());
+        this.requester = mapUser(connection.getRequester());
+        this.receiver = mapUser(connection.getReceiver());
     }
 
     public Connection toCoreConnection() {
@@ -52,8 +53,8 @@ public class ConnectionEntity extends AbstractEntity<UUID> {
         coreConnection.setId(this.id);
         coreConnection.setConnectionStatus(this.connectionStatus);
 
-        if(this.user != null) coreConnection.setUser((this.user.toCoreUser()));
-        if(this.friend != null) coreConnection.setFriend((this.friend.toCoreUser()));
+        if(this.requester != null) coreConnection.setRequester((this.requester.toCoreUser()));
+        if(this.receiver != null) coreConnection.setReceiver((this.receiver.toCoreUser()));
 
         return coreConnection;
     }

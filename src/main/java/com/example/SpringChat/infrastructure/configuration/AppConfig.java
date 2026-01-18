@@ -1,7 +1,9 @@
 package com.example.SpringChat.infrastructure.configuration;
 
+import com.example.SpringChat.application.connection.port.SendInvitePort;
 import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
 import com.example.SpringChat.application.connection.usecase.RetrieveUserFriendsUseCase;
+import com.example.SpringChat.application.connection.usecase.SendInviteUseCase;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.port.SearchUsersInputPort;
@@ -33,8 +35,8 @@ public class AppConfig {
     }
 
     @Bean
-    public ConnectionGateway connectionGateway(SpringConnectionRepository springConnectionRepository){
-        return new ConnectionGatewayAdapter(springConnectionRepository){};
+    public ConnectionGateway connectionGateway(SpringConnectionRepository springConnectionRepository, SpringUserRepository springUserRepository){
+        return new ConnectionGatewayAdapter(springConnectionRepository, springUserRepository){};
     }
 
     @Bean
@@ -55,5 +57,10 @@ public class AppConfig {
     @Bean
     public UserFriendsInputPort userFriendsInputPort(ConnectionGateway connectionGateway){
         return new RetrieveUserFriendsUseCase(connectionGateway);
+    }
+
+    @Bean
+    public SendInvitePort sendInvitePort(ConnectionGateway connectionGateway, UserGateway userGateway){
+        return new SendInviteUseCase(connectionGateway,userGateway);
     }
 }
