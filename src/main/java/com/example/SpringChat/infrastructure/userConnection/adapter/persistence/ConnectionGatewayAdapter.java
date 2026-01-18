@@ -31,6 +31,7 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
         return this.springConnectionRepository.existsById(id);
     }
 
+
     @Override
     public Connection sendInvite(UUID requesterId,UUID receiverId,ConnectionStatus status){
         ConnectionEntity rawEntity = new ConnectionEntity();
@@ -54,7 +55,19 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
     }
 
     @Override
-    public Connection acceptInvite(UUID connectionId){ return new Connection(); }
+    public Optional<Connection> acceptInvite(UUID id,ConnectionStatus status)
+    {
+        Optional<ConnectionEntity> entity = this.springConnectionRepository.findByIdAndConnectionStatus(id,status);
+
+        if(entity.isPresent()){
+            entity.get().setConnectionStatus(ConnectionStatus.accepted);
+
+            ConnectionEntity updatedEntity = this.springConnectionRepository.save(entity.get());
+            return Optional.of(updatedEntity.toCoreConnection());
+        }
+
+        return Optional.empty();
+    }
 
     @Override
     public Void refuseInvite(UUID connectionId){ return null; }

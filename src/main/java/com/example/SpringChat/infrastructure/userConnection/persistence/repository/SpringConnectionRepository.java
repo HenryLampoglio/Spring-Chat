@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -38,4 +39,6 @@ public interface SpringConnectionRepository extends JpaRepository<ConnectionEnti
             "LEFT JOIN FETCH c.receiver " +
             "WHERE c.receiver.id = :friendId")
     List<ConnectionEntity> findAllByFriendIdWithUsers(@Param("friendId") UUID friendId);
+
+    Optional<ConnectionEntity> findByIdAndConnectionStatus(UUID id,ConnectionStatus status);
 }

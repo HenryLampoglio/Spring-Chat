@@ -6,6 +6,7 @@ import com.example.SpringChat.application.shared.request.PaginationRequest;
 import com.example.SpringChat.core.enums.ConnectionStatus;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ConnectionGateway {
@@ -16,7 +17,7 @@ public interface ConnectionGateway {
 
     void cancelConnection(UUID connectionId);
 
-    Connection acceptInvite(UUID connectionId);
+    Optional<Connection> acceptInvite(UUID connectionId, ConnectionStatus status);
 
     Void refuseInvite(UUID connectionId);
 

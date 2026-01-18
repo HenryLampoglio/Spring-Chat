@@ -22,7 +22,7 @@ public class SendInviteUseCase implements SendInvitePort {
     public Connection execute(SendInviteCommand command){
         if(!userGateway.userExists(command.receiverId())) throw new UserNotFoundException("Usuário não encontrado");
 
-        Connection request = connectionGateway.sendInvite(command.requesterId(), command.receiverId(), ConnectionStatus.pending);
-        return request;
+        return connectionGateway.sendInvite(command.requesterId(), command.receiverId(), ConnectionStatus.pending);
+
     }
 }

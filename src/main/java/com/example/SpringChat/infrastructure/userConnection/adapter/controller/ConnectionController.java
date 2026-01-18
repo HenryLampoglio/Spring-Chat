@@ -5,6 +5,7 @@ import com.example.SpringChat.application.connection.command.AcceptInviteCommand
 import com.example.SpringChat.application.connection.command.CancelConnectionCommand;
 import com.example.SpringChat.application.connection.command.SendInviteCommand;
 import com.example.SpringChat.application.connection.command.UserFriendsCommand;
+import com.example.SpringChat.application.connection.port.AcceptInvitePort;
 import com.example.SpringChat.application.connection.port.CancelConnectionPort;
 import com.example.SpringChat.application.connection.port.SendInvitePort;
 import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
@@ -31,11 +32,18 @@ public class ConnectionController {
     private final UserFriendsInputPort userFriendsInputPort;
     private final SendInvitePort sendInvitePort;
     private final CancelConnectionPort cancelConnectionPort;
+    private final AcceptInvitePort acceptInvitePort;
 
-    public ConnectionController(UserFriendsInputPort userFriendsInputPort, SendInvitePort sendInvitePort, CancelConnectionPort cancelConnectionPort){
+    public ConnectionController(
+            UserFriendsInputPort userFriendsInputPort,
+            SendInvitePort sendInvitePort,
+            CancelConnectionPort cancelConnectionPort,
+            AcceptInvitePort acceptInvitePort
+    ){
         this.userFriendsInputPort = userFriendsInputPort;
         this.sendInvitePort = sendInvitePort;
         this.cancelConnectionPort = cancelConnectionPort;
+        this.acceptInvitePort = acceptInvitePort;
     }
 
     @GetMapping("/friends")
@@ -71,14 +79,14 @@ public class ConnectionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PatchMapping("/accept-invite/{id")
+    @PatchMapping("/accept-invite/{id}")
     public ResponseEntity<AcceptInviteResponse> acceptInvite(
             @PathVariable UUID id
     )
     {
         AcceptInviteCommand command = new AcceptInviteCommand(id);
         Connection connection = acceptInvitePort.execute(command);
-        AcceptInviteResponse response= new AcceptInviteResponse(
+        AcceptInviteResponse response = new AcceptInviteResponse(
                 connection,
                 "Convite aceito"
         );

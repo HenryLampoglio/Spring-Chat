@@ -1,8 +1,10 @@
 package com.example.SpringChat.infrastructure.configuration;
 
+import com.example.SpringChat.application.connection.port.AcceptInvitePort;
 import com.example.SpringChat.application.connection.port.CancelConnectionPort;
 import com.example.SpringChat.application.connection.port.SendInvitePort;
 import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
+import com.example.SpringChat.application.connection.usecase.AcceptInviteUseCase;
 import com.example.SpringChat.application.connection.usecase.CancelConnectionUseCase;
 import com.example.SpringChat.application.connection.usecase.RetrieveUserFriendsUseCase;
 import com.example.SpringChat.application.connection.usecase.SendInviteUseCase;
@@ -69,5 +71,9 @@ public class AppConfig {
     @Bean
     public CancelConnectionPort cancelInvitePort(ConnectionGateway connectionGateway){
         return new CancelConnectionUseCase(connectionGateway);
+    }
+
+    @Bean public AcceptInvitePort acceptInvitePortPort(ConnectionGateway connectionGateway){
+        return new AcceptInviteUseCase(connectionGateway);
     }
 }
