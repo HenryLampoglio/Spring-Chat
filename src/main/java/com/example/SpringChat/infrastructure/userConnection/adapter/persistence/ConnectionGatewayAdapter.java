@@ -70,9 +70,6 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
     }
 
     @Override
-    public Void refuseInvite(UUID connectionId){ return null; }
-
-    @Override
     public PaginationResponse<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest){
 
         Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
@@ -85,6 +82,36 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
             connectionsCore,
             entityList.getTotalElements(),
             entityList.getTotalPages()
+        );
+    }
+
+    @Override
+    public PaginationResponse<Connection> getInvitesSentByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status){
+        Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
+
+        Page<ConnectionEntity> entityList = springConnectionRepository.findAllByRequesterIdAndConnectionStatusOrderByCreatedAt(userId, status, springPageable);
+
+        List<Connection> sentInvitesConnectionCore = entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
+
+        return  new PaginationResponse<>(
+                sentInvitesConnectionCore,
+                entityList.getTotalElements(),
+                entityList.getTotalPages()
+        );
+    }
+
+    @Override
+    public PaginationResponse<Connection> getInvitesReceivedByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status){
+        Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
+
+        Page<ConnectionEntity> entityList = springConnectionRepository.findAllByReceiverIdAndConnectionStatusOrderByCreatedAt(userId, status, springPageable);
+
+        List<Connection> sentInvitesConnectionCore = entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
+
+        return  new PaginationResponse<>(
+                sentInvitesConnectionCore,
+                entityList.getTotalElements(),
+                entityList.getTotalPages()
         );
     }
 

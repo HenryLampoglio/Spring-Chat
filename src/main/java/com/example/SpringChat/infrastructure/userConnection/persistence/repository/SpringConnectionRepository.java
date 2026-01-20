@@ -41,4 +41,8 @@ public interface SpringConnectionRepository extends JpaRepository<ConnectionEnti
     List<ConnectionEntity> findAllByFriendIdWithUsers(@Param("friendId") UUID friendId);
 
     Optional<ConnectionEntity> findByIdAndConnectionStatus(UUID id,ConnectionStatus status);
+
+    Page<ConnectionEntity> findAllByRequesterIdAndConnectionStatusOrderByCreatedAt(UUID id,ConnectionStatus status, Pageable pageable);
+
+    Page<ConnectionEntity> findAllByReceiverIdAndConnectionStatusOrderByCreatedAt(UUID id,ConnectionStatus status, Pageable pageable);
 }

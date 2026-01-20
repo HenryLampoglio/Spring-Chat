@@ -15,13 +15,17 @@ public interface ConnectionGateway {
 
     Connection sendInvite(UUID requesterId, UUID receiverId, ConnectionStatus status);
 
+
+
     void cancelConnection(UUID connectionId);
 
     Optional<Connection> acceptInvite(UUID connectionId, ConnectionStatus status);
 
-    Void refuseInvite(UUID connectionId);
-
     PaginationResponse<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest);
+
+    PaginationResponse<Connection> getInvitesSentByUser(UUID userId,PaginationRequest paginationRequest,ConnectionStatus status);
+
+    PaginationResponse<Connection> getInvitesReceivedByUser(UUID userId,PaginationRequest paginationRequest,ConnectionStatus status);
 
     List<Connection> findAllByUserIdAndStatusWithUsers(UUID userId);
 }

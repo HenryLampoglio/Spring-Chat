@@ -6,7 +6,6 @@ import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.infrastructure.AbstractEntity;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
