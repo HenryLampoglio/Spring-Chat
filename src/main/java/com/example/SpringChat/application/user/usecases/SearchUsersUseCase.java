@@ -1,4 +1,4 @@
-package com.example.SpringChat.application.user.usecase;
+package com.example.SpringChat.application.user.usecases;
 
 import com.example.SpringChat.application.user.command.SearchUsersCommand;
 import com.example.SpringChat.application.user.port.SearchUsersInputPort;

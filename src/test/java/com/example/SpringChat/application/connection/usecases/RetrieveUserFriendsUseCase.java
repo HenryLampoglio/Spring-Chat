@@ -1,4 +1,4 @@
-package com.example.SpringChat.application.user.usecase;
+package com.example.SpringChat.application.connection.usecases;
 
 // 1. IMPORT the implementation class explicitly
 import com.example.SpringChat.application.connection.usecase.RetrieveUserFriendsUseCase;
@@ -7,7 +7,6 @@ import com.example.SpringChat.application.shared.request.PaginationRequest;
 import com.example.SpringChat.application.shared.response.PaginationResponse;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
-import com.example.SpringChat.core.user.gateway.UserGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

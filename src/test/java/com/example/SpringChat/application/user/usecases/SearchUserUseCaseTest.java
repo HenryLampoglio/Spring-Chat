@@ -1,7 +1,6 @@
-package com.example.SpringChat.application.user.usecase;
+package com.example.SpringChat.application.user.usecases;
 
 import com.example.SpringChat.application.user.command.SearchUsersCommand;
-import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import org.junit.jupiter.api.Assertions;
