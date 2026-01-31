@@ -125,11 +125,13 @@
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<configuration>
+					<url>jdbc:postgresql://localhost:5432/chat_auth</url>
 					<user>chatuser</user>
 					<password>chatpass</password>
 					<schemas>
 						<schema>chat_auth</schema>
 					</schemas>
+					<cleanDisabled>false</cleanDisabled>
 				</configuration>
 			</plugin>
 			<plugin>
