@@ -10,23 +10,24 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface SpringConnectionRepository extends JpaRepository<ConnectionEntity, UUID> {
 
     @Query(value = "SELECT DISTINCT c FROM ConnectionEntity c " +
-            "LEFT JOIN FETCH c.user " +
-            "LEFT JOIN FETCH c.friend " +
-            "WHERE c.user.id = :userId OR c.friend.id = :userId AND c.connectionStatus = :connectionAccepted",
+            "LEFT JOIN FETCH c.requester " +
+            "LEFT JOIN FETCH c.receiver " +
+            "WHERE c.requester.id = :userId OR c.receiver.id = :userId AND c.connectionStatus = :connectionAccepted",
             countQuery = "SELECT count(c) FROM ConnectionEntity c " +
-                    "WHERE c.user.id = :userId OR c.friend.id = :userId")
+                    "WHERE c.requester.id = :userId OR c.receiver.id = :userId")
     Page<ConnectionEntity> findAllByUserIdOrFriendIdWithUsers(@Param("connectionAccepted") ConnectionStatus status,@Param("userId") UUID userId, Pageable pageable);
 
     @Query("SELECT c FROM ConnectionEntity c " +
-            "LEFT JOIN FETCH c.user " +
-            "LEFT JOIN FETCH c.friend " +
-            "WHERE (c.user.id = :userId OR c.friend.id = :userId) " +
+            "LEFT JOIN FETCH c.requester " +
+            "LEFT JOIN FETCH c.receiver " +
+            "WHERE (c.requester.id = :userId OR c.receiver.id = :userId) " +
             "AND c.connectionStatus = :status")
     List<ConnectionEntity> findAllByUserIdAndStatusWithUsers(
             @Param("userId") UUID userId,
@@ -34,8 +35,14 @@ public interface SpringConnectionRepository extends JpaRepository<ConnectionEnti
     );
 
     @Query("SELECT c FROM ConnectionEntity c " +
-            "LEFT JOIN FETCH c.user " +
-            "LEFT JOIN FETCH c.friend " +
-            "WHERE c.friend.id = :friendId")
+            "LEFT JOIN FETCH c.requester " +
+            "LEFT JOIN FETCH c.receiver " +
+            "WHERE c.receiver.id = :friendId")
     List<ConnectionEntity> findAllByFriendIdWithUsers(@Param("friendId") UUID friendId);
+
+    Optional<ConnectionEntity> findByIdAndConnectionStatus(UUID id,ConnectionStatus status);
+
+    Page<ConnectionEntity> findAllByRequesterIdAndConnectionStatusOrderByCreatedAt(UUID id,ConnectionStatus status, Pageable pageable);
+
+    Page<ConnectionEntity> findAllByReceiverIdAndConnectionStatusOrderByCreatedAt(UUID id,ConnectionStatus status, Pageable pageable);
 }

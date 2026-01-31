@@ -1,22 +1,19 @@
-package com.example.SpringChat.application.user.usecase;
+package com.example.SpringChat.application.user.usecases;
 
 import com.example.SpringChat.application.user.command.CreateUserCommand;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.core.user.exception.UserEmailAlreadyExistsException;
 import com.example.SpringChat.core.user.gateway.UserGateway;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Random;
 
 public class CreateUserUseCase implements CreateUserInputPort {
     private final UserGateway userGateway;
     private final Random random = new Random();
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public CreateUserUseCase(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder) {
+    public CreateUserUseCase(UserGateway userGateway) {
         this.userGateway = userGateway;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -30,7 +27,7 @@ public class CreateUserUseCase implements CreateUserInputPort {
             publicIdentificationKey = random.nextInt(900000) + 100000;
         } while (userGateway.existsByPublicIdentificationKey(publicIdentificationKey));
 
-        String hashedPassword = passwordEncoder.encode(command.hashedPassword());
+        String hashedPassword = userGateway.encodePassword(command.hashedPassword());
 
         User newUser = new User(command.nickname(), command.email(), hashedPassword, publicIdentificationKey);
 
