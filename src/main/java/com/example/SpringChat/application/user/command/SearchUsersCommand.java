@@ -21,7 +21,17 @@ public class SearchUsersCommand {
 
     public Integer getKeyPart(){
         int index = getSeparatorIndex();
-        return (index == -1) ? 0: Integer.parseInt(this.userIdentifier.substring(index + 1));
+
+        if(index == -1 || index == this.userIdentifier.length() - 1){
+            return 0;
+        }
+
+        try{
+            String keyContent = this.userIdentifier.substring(index + 1);
+            return Integer.parseInt(keyContent);
+        } catch (NumberFormatException e){
+            return 0;
+        }
     }
 
     private int getSeparatorIndex() {
