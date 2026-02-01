@@ -1,15 +1,13 @@
 package com.example.SpringChat.infrastructure.configuration;
 
-import com.example.SpringChat.application.connection.command.UserFriendsCommand;
-import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
-import com.example.SpringChat.application.connection.usecase.SearchUserFriendsUseCase;
+import com.example.SpringChat.application.connection.port.*;
+import com.example.SpringChat.application.connection.usecase.*;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.port.SearchUsersInputPort;
-import com.example.SpringChat.application.user.usecase.CreateUserUseCase;
-import com.example.SpringChat.application.user.usecase.LoginUseCase;
-import com.example.SpringChat.application.user.usecase.SearchUsersUseCase;
-import com.example.SpringChat.core.connection.entity.Connection;
+import com.example.SpringChat.application.user.usecases.CreateUserUseCase;
+import com.example.SpringChat.application.user.usecases.LoginUseCase;
+import com.example.SpringChat.application.user.usecases.SearchUsersUseCase;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
@@ -21,40 +19,32 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
-
 @Configuration
 public class AppConfig {
 
-    // 1. Cria a instância do BCryptPasswordEncoder
-    // O BCryptPasswordEncoder é uma dependência externa que é usada pelo UseCase
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. Cria a instância do UserGateway (o adaptador)
-    // Spring injeta o SpringUserRepository aqui.
     @Bean
-    public UserGateway userGateway(SpringUserRepository springUserRepository) {
-        return new UserGatewayAdapter(springUserRepository) {};
+    public UserGateway userGateway(SpringUserRepository springUserRepository, BCryptPasswordEncoder passwordEncoder, TokenService tokenService) {
+        return new UserGatewayAdapter(springUserRepository, passwordEncoder, tokenService) {};
     }
 
     @Bean
-    public ConnectionGateway connectionGateway(SpringConnectionRepository springConnectionRepository){
-        return new ConnectionGatewayAdapter(springConnectionRepository){};
-    }
-
-    // 3. Cria a instância do UseCase
-    // Spring injeta o UserGateway e o BCryptPasswordEncoder aqui.
-    @Bean
-    public CreateUserInputPort createUserInputPort(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder) {
-        return new CreateUserUseCase(userGateway, passwordEncoder);
+    public ConnectionGateway connectionGateway(SpringConnectionRepository springConnectionRepository, SpringUserRepository springUserRepository){
+        return new ConnectionGatewayAdapter(springConnectionRepository, springUserRepository){};
     }
 
     @Bean
-    public LoginInputPort loginInputPort(UserGateway userGateway, BCryptPasswordEncoder passwordEncoder, TokenService tokenService){
-        return new LoginUseCase(userGateway, passwordEncoder, tokenService);
+    public CreateUserInputPort createUserInputPort(UserGateway userGateway) {
+        return new CreateUserUseCase(userGateway);
+    }
+
+    @Bean
+    public LoginInputPort loginInputPort(UserGateway userGateway){
+        return new LoginUseCase(userGateway);
     }
 
     @Bean
@@ -64,6 +54,30 @@ public class AppConfig {
 
     @Bean
     public UserFriendsInputPort userFriendsInputPort(ConnectionGateway connectionGateway){
-        return new SearchUserFriendsUseCase(connectionGateway);
+        return new RetrieveUserFriendsUseCase(connectionGateway);
+    }
+
+    @Bean
+    public SendInvitePort sendInvitePort(ConnectionGateway connectionGateway, UserGateway userGateway){
+        return new SendInviteUseCase(connectionGateway,userGateway);
+    }
+
+    @Bean
+    public CancelConnectionPort cancelInvitePort(ConnectionGateway connectionGateway){
+        return new CancelConnectionUseCase(connectionGateway);
+    }
+
+    @Bean
+    public AcceptInvitePort acceptInvitePortPort(ConnectionGateway connectionGateway){
+        return new AcceptInviteUseCase(connectionGateway);
+    }
+
+    @Bean
+    public InvitesSentInputPort invitesSentInputPort(ConnectionGateway connectionGateway){
+        return new GetInvitesSentUseCase(connectionGateway);
+    }
+
+    @Bean InvitesReceivedInputPort invitesReceivedInputPort(ConnectionGateway connectionGateway){
+        return new GetInvitesReceivedUseCase(connectionGateway);
     }
 }

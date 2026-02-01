@@ -5,6 +5,7 @@ import com.example.SpringChat.infrastructure.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class UserEntity extends AbstractEntity<UUID> implements UserDetails {
     @Column(name = "password_hash") // Renomeado para clareza
     private String hashedPassword;
 
-    @NotBlank
+    @NotNull
     private Integer publicIdentificationKey;
 
     private String userQuote;

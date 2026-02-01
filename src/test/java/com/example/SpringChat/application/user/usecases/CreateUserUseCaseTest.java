@@ -1,6 +1,6 @@
 // src/test/java/com/exemplo/SpringChat/application/user/usecase/CreateUserUseCaseTest.java
 
-package com.example.SpringChat.application.user.usecase;
+package com.example.SpringChat.application.user.usecases;
 
 import com.example.SpringChat.application.user.command.CreateUserCommand;
 import com.example.SpringChat.core.user.entity.User;

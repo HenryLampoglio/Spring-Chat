@@ -15,14 +15,14 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Connection extends AbstractEntity<UUID> {
-    private User user;
-    private User friend;
+    private User requester;
+    private User receiver;
     private ConnectionStatus connectionStatus;
 
 
-    public Connection(User user, User friend,ConnectionStatus connectionStatus){
-        this.user = user;
-        this.friend = friend;
+    public Connection(User requester, User receiver,ConnectionStatus connectionStatus){
+        this.requester = requester;
+        this.receiver = receiver;
         this.connectionStatus = connectionStatus;
     }
 }
