@@ -3,6 +3,7 @@ package com.example.SpringChat.infrastructure.userConnection.adapter.controller;
 
 import com.example.SpringChat.application.connection.command.*;
 import com.example.SpringChat.application.connection.port.*;
+import com.example.SpringChat.application.connection.responseDTO.InvitesSentResponseDTO;
 import com.example.SpringChat.application.shared.response.PaginationResponse;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
@@ -13,6 +14,7 @@ import com.example.SpringChat.infrastructure.userConnection.adapter.controller.d
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.invitesSent.response.InvitesSentResponse;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.sendInvite.response.SendInviteResponse;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.userFriends.response.UserFriendsResponse;
+import com.example.SpringChat.infrastructure.userConnection.adapter.controller.mapper.InvitesSent.InvitesSentMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,7 @@ public class ConnectionController {
     private final AcceptInvitePort acceptInvitePort;
     private final InvitesSentInputPort invitesSentInputPort;
     private final InvitesReceivedInputPort invitesReceivedInputPort;
+    private final InvitesSentMapper invitesSentMapper;
 
     public ConnectionController(
             UserFriendsInputPort userFriendsInputPort,
@@ -38,7 +41,8 @@ public class ConnectionController {
             CancelConnectionPort cancelConnectionPort,
             AcceptInvitePort acceptInvitePort,
             InvitesSentInputPort invitesSentInputPort,
-            InvitesReceivedInputPort invitesReceivedInputPort
+            InvitesReceivedInputPort invitesReceivedInputPort,
+            InvitesSentMapper invitesSentMapper
     ){
         this.userFriendsInputPort = userFriendsInputPort;
         this.sendInvitePort = sendInvitePort;
@@ -46,10 +50,11 @@ public class ConnectionController {
         this.acceptInvitePort = acceptInvitePort;
         this.invitesSentInputPort = invitesSentInputPort;
         this.invitesReceivedInputPort = invitesReceivedInputPort;
+        this.invitesSentMapper = invitesSentMapper;
     }
 
     @GetMapping("/invites-sent")
-    public ResponseEntity<InvitesSentResponse> invitesSent(
+    public ResponseEntity<PaginationResponse<InvitesSentResponseDTO>> invitesSent(
             @AuthenticationPrincipal UserEntity user,
             @PageableDefault(page = 0, size = 10) Pageable pageable
     )
@@ -57,9 +62,7 @@ public class ConnectionController {
         PaginationRequest paginationRequest = new PaginationRequest(pageable.getPageNumber(), pageable.getPageSize());
         InvitesSentCommand command = new InvitesSentCommand(user.getId(), paginationRequest);
         PaginationResponse<Connection> foundInvites = invitesSentInputPort.execute(command);
-        InvitesSentResponse response = new InvitesSentResponse(
-            foundInvites
-        );
+        PaginationResponse<InvitesSentResponseDTO> response = invitesSentMapper.toPaginationResponse(foundInvites);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
