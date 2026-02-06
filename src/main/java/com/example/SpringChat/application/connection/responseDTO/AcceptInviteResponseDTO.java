@@ -4,5 +4,5 @@ import com.example.SpringChat.core.enums.ConnectionStatus;
 
 import java.time.LocalDateTime;
 
-public record AcceptInviteResponseDTO(String connectionId, LocalDateTime createdAt, LocalDateTime updateAt, ConnectionStatus connectionStatus) {
+public record AcceptInviteResponseDTO(String connectionId, LocalDateTime createdAt, LocalDateTime updatedAt, ConnectionStatus connectionStatus) {
 }
