@@ -8,9 +8,6 @@ import com.example.SpringChat.application.connection.responseDTO.AcceptInviteRes
 import com.example.SpringChat.application.connection.responseDTO.SendInviteResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
-import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.acceptInvite.response.AcceptInviteResponse;
-import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.cancelConnection.response.CancelConnectionResponse;
-import com.example.SpringChat.infrastructure.userConnection.adapter.controller.dto.sendInvite.response.SendInviteResponse;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.presenter.ConnectionActionPresenter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
