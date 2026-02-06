@@ -1,4 +1,4 @@
-package com.example.SpringChat.infrastructure.userConnection.adapter.controller.mapper.InvitesSent;
+package com.example.SpringChat.infrastructure.userConnection.adapter.controller.mapper;
 
 import com.example.SpringChat.application.connection.responseDTO.InvitesSentResponseDTO;
 import com.example.SpringChat.application.shared.response.PaginationResponse;
