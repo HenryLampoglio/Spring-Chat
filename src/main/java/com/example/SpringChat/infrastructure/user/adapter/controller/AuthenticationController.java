@@ -4,6 +4,7 @@ import com.example.SpringChat.application.user.command.CreateUserCommand;
 import com.example.SpringChat.application.user.command.LoginCommand;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
+import com.example.SpringChat.application.user.responseDTO.LoginResponseDTO;
 import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.authentication.CreateUserRequest;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.authentication.CreateUserResponse;
@@ -44,13 +45,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequest request){
         LoginCommand command = new LoginCommand(
             request.getEmail(),
             request.getPassword()
         );
-        LoginResponse loggedUser = loginInputPort.execute(command);
-        LoginResponse response = new LoginResponse(loggedUser.getToken(), loggedUser.getUser());
+        LoginResponseDTO response = loginInputPort.execute(command);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
