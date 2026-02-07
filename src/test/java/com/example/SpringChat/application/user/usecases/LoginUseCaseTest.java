@@ -1,6 +1,7 @@
 package com.example.SpringChat.application.user.usecases;
 
 import com.example.SpringChat.application.user.command.LoginCommand;
+import com.example.SpringChat.application.user.output.LoginOutput;
 import com.example.SpringChat.application.user.responseDTO.LoginResponseDTO;
 import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesException;
@@ -57,7 +58,7 @@ class LoginUseCaseTest {
         Mockito.when(tokenService.generateToken(foundUser))
                 .thenReturn("generated-jwt-token");
 
-        LoginResponseDTO userAuth = useCase.execute(command);
+        LoginOutput userAuth = useCase.execute(command);
 
         Assertions.assertNotNull(userAuth);
         Assertions.assertEquals("generated-jwt-token", userAuth.token());

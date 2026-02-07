@@ -2,7 +2,7 @@ package com.example.SpringChat.application.connection.usecase;
 
 import com.example.SpringChat.application.connection.command.UserFriendsCommand;
 import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
-import com.example.SpringChat.application.shared.response.PaginationResponse;
+import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.exception.ConnectionsNotFoundException;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
@@ -16,13 +16,13 @@ public class RetrieveUserFriendsUseCase implements UserFriendsInputPort {
     public RetrieveUserFriendsUseCase(ConnectionGateway connectionGateway) {this.connectionGateway = connectionGateway;}
 
     @Override
-    public PaginationResponse<Connection> execute(UserFriendsCommand command){
+    public PaginationResponseDTO<Connection> execute(UserFriendsCommand command){
         UUID userId = command.userId();
         PaginationRequest paginationRequest = command.paginationRequest();
 
-        PaginationResponse<Connection> connections = connectionGateway.searchUsers(userId, paginationRequest);
+        PaginationResponseDTO<Connection> connections = connectionGateway.searchUsers(userId, paginationRequest);
 
-        if(connections.getItems().isEmpty()){
+        if(connections.items().isEmpty()){
             throw new ConnectionsNotFoundException("This user didn't make any connections yet");
         }
 

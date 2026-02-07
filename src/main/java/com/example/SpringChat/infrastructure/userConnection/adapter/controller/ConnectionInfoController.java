@@ -10,7 +10,7 @@ import com.example.SpringChat.application.connection.responseDTO.InvitesReceived
 import com.example.SpringChat.application.connection.responseDTO.InvitesSentResponseDTO;
 import com.example.SpringChat.application.connection.responseDTO.UserFriendsResponseDTO;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
-import com.example.SpringChat.application.shared.response.PaginationResponse;
+import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.presenter.ConnectionInfoPresenter;
@@ -44,43 +44,43 @@ public class ConnectionInfoController {
     }
 
     @GetMapping("/invites-sent")
-    public ResponseEntity<PaginationResponse<InvitesSentResponseDTO>> invitesSent(
+    public ResponseEntity<PaginationResponseDTO<InvitesSentResponseDTO>> invitesSent(
             @AuthenticationPrincipal UserEntity user,
             @PageableDefault(page = 0, size = 10) Pageable pageable
     )
     {
         PaginationRequest paginationRequest = new PaginationRequest(pageable.getPageNumber(), pageable.getPageSize());
         InvitesSentCommand command = new InvitesSentCommand(user.getId(), paginationRequest);
-        PaginationResponse<Connection> foundInvites = invitesSentInputPort.execute(command);
-        PaginationResponse<InvitesSentResponseDTO> response = connectionInfoPresenter.toInvitesSentResponse(foundInvites);
+        PaginationResponseDTO<Connection> foundInvites = invitesSentInputPort.execute(command);
+        PaginationResponseDTO<InvitesSentResponseDTO> response = foundInvites.map(connectionInfoPresenter::toInvitesSentResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/invites-received")
-    public ResponseEntity<PaginationResponse<InvitesReceivedResponseDTO>> invitesReceived(
+    public ResponseEntity<PaginationResponseDTO<InvitesReceivedResponseDTO>> invitesReceived(
             @AuthenticationPrincipal UserEntity user,
             @PageableDefault(page = 0, size = 10) Pageable pageable
     )
     {
         PaginationRequest paginationRequest = new PaginationRequest(pageable.getPageNumber(), pageable.getPageSize());
         InvitesReceivedCommand command = new InvitesReceivedCommand(user.getId(), paginationRequest);
-        PaginationResponse<Connection> foundInvites = invitesReceivedInputPort.execute(command);
-        PaginationResponse<InvitesReceivedResponseDTO> response = connectionInfoPresenter.toInviteReceivedResponse(foundInvites);
+        PaginationResponseDTO<Connection> foundInvites = invitesReceivedInputPort.execute(command);
+        PaginationResponseDTO<InvitesReceivedResponseDTO> response = foundInvites.map(connectionInfoPresenter::toInviteReceivedResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<PaginationResponse<UserFriendsResponseDTO>> userFriends(
+    public ResponseEntity<PaginationResponseDTO<UserFriendsResponseDTO>> userFriends(
             @AuthenticationPrincipal UserEntity user,
             @PageableDefault(page = 0, size = 10) Pageable pageable
     )
     {
         PaginationRequest paginationRequest = new PaginationRequest(pageable.getPageNumber(), pageable.getPageSize());
         UserFriendsCommand command = new UserFriendsCommand(user.getId(), paginationRequest);
-        PaginationResponse<Connection> foundConnections = userFriendsInputPort.execute(command);
-        PaginationResponse<UserFriendsResponseDTO> response = connectionInfoPresenter.toUserFriendsResponse(foundConnections);
+        PaginationResponseDTO<Connection> foundConnections = userFriendsInputPort.execute(command);
+        PaginationResponseDTO<UserFriendsResponseDTO> response = foundConnections.map(connectionInfoPresenter::toUserFriendsResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

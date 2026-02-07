@@ -1,6 +1,7 @@
 package com.example.SpringChat.application.user.usecases;
 
 import com.example.SpringChat.application.user.command.LoginCommand;
+import com.example.SpringChat.application.user.output.LoginOutput;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.responseDTO.LoginResponseDTO;
 import com.example.SpringChat.core.user.entity.User;
@@ -16,7 +17,7 @@ public class LoginUseCase implements LoginInputPort {
     }
 
     @Override
-    public LoginResponseDTO execute(LoginCommand command) {
+    public LoginOutput execute(LoginCommand command) {
         User user = userGateway.findByEmail(command.Email()).
                 orElseThrow(() ->new UserEmailNotFoundException("Usuário com esse email não encontrado"));
         boolean passwordMatches = userGateway.validatePassword(command.password(), user.getHashedPassword());
@@ -25,6 +26,6 @@ public class LoginUseCase implements LoginInputPort {
 
 
         String userToken = userGateway.generateAuthToken(user);
-        return new LoginResponseDTO(userToken, user.getEmail(), user.getNickname(), user.getPublicIdentificationKey());
+        return new LoginOutput(userToken, user);
     }
 }

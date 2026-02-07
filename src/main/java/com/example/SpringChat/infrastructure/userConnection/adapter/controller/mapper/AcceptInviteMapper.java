@@ -9,8 +9,5 @@ import org.mapstruct.Mapping;
 public interface AcceptInviteMapper {
 
     @Mapping(source = "id", target="connectionId")
-    @Mapping(source = "createdAt", target = "createdAt")
-    @Mapping(source = "updatedAt", target = "updatedAt")
-    @Mapping(source = "connectionStatus", target = "connectionStatus")
     AcceptInviteResponseDTO toResponse(Connection connection);
 }

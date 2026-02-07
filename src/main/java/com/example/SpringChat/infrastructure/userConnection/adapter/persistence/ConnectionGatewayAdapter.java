@@ -1,6 +1,6 @@
 package com.example.SpringChat.infrastructure.userConnection.adapter.persistence;
 
-import com.example.SpringChat.application.shared.response.PaginationResponse;
+import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
@@ -70,7 +70,7 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
     }
 
     @Override
-    public PaginationResponse<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest){
+    public PaginationResponseDTO<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest){
 
         Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
 
@@ -78,39 +78,39 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
 
         List<Connection> connectionsCore = entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
 
-        return new PaginationResponse<>(
+        return new PaginationResponseDTO<>(
             connectionsCore,
-            entityList.getTotalElements(),
+            entityList.getTotalPages(),
             entityList.getTotalPages()
         );
     }
 
     @Override
-    public PaginationResponse<Connection> getInvitesSentByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status){
+    public PaginationResponseDTO<Connection> getInvitesSentByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status){
         Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
 
         Page<ConnectionEntity> entityList = springConnectionRepository.findAllByRequesterIdAndConnectionStatusOrderByCreatedAt(userId, status, springPageable);
 
         List<Connection> sentInvitesConnectionCore = entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
 
-        return  new PaginationResponse<>(
+        return  new PaginationResponseDTO<>(
                 sentInvitesConnectionCore,
-                entityList.getTotalElements(),
+                entityList.getTotalPages(),
                 entityList.getTotalPages()
         );
     }
 
     @Override
-    public PaginationResponse<Connection> getInvitesReceivedByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status){
+    public PaginationResponseDTO<Connection> getInvitesReceivedByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status){
         Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
 
         Page<ConnectionEntity> entityList = springConnectionRepository.findAllByReceiverIdAndConnectionStatusOrderByCreatedAt(userId, status, springPageable);
 
         List<Connection> sentInvitesConnectionCore = entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
 
-        return  new PaginationResponse<>(
+        return  new PaginationResponseDTO<>(
                 sentInvitesConnectionCore,
-                entityList.getTotalElements(),
+                entityList.getTotalPages(),
                 entityList.getTotalPages()
         );
     }

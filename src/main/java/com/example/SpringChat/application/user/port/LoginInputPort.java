@@ -1,8 +1,8 @@
 package com.example.SpringChat.application.user.port;
 
 import com.example.SpringChat.application.user.command.LoginCommand;
-import com.example.SpringChat.application.user.responseDTO.LoginResponseDTO;
+import com.example.SpringChat.application.user.output.LoginOutput;
 
 public interface LoginInputPort {
-    LoginResponseDTO execute(LoginCommand command);
+    LoginOutput execute(LoginCommand command);
 }

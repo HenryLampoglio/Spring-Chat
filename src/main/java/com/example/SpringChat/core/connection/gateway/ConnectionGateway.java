@@ -1,6 +1,6 @@
 package com.example.SpringChat.core.connection.gateway;
 
-import com.example.SpringChat.application.shared.response.PaginationResponse;
+import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
 import com.example.SpringChat.core.enums.ConnectionStatus;
@@ -21,11 +21,11 @@ public interface ConnectionGateway {
 
     Optional<Connection> acceptInvite(UUID connectionId, ConnectionStatus status);
 
-    PaginationResponse<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest);
+    PaginationResponseDTO<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest);
 
-    PaginationResponse<Connection> getInvitesSentByUser(UUID userId,PaginationRequest paginationRequest,ConnectionStatus status);
+    PaginationResponseDTO<Connection> getInvitesSentByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status);
 
-    PaginationResponse<Connection> getInvitesReceivedByUser(UUID userId,PaginationRequest paginationRequest,ConnectionStatus status);
+    PaginationResponseDTO<Connection> getInvitesReceivedByUser(UUID userId, PaginationRequest paginationRequest, ConnectionStatus status);
 
     List<Connection> findAllByUserIdAndStatusWithUsers(UUID userId);
 }

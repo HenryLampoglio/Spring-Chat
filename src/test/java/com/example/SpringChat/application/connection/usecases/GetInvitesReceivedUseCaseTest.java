@@ -1,12 +1,9 @@
 package com.example.SpringChat.application.connection.usecases;
 
 import com.example.SpringChat.application.connection.command.InvitesReceivedCommand;
-import com.example.SpringChat.application.connection.command.InvitesSentCommand;
 import com.example.SpringChat.application.connection.usecase.GetInvitesReceivedUseCase;
-import com.example.SpringChat.application.connection.usecase.GetInvitesSentUseCase;
-import com.example.SpringChat.application.connection.usecase.SendInviteUseCase;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
-import com.example.SpringChat.application.shared.response.PaginationResponse;
+import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.exception.InvitesSolicitationsNotFoundException;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
@@ -45,15 +42,15 @@ public class GetInvitesReceivedUseCaseTest {
         //arrange
 
         Mockito.when(connectionGateway.getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.pending)))
-                .thenReturn(new PaginationResponse<>(
+                .thenReturn(new PaginationResponseDTO<>(
                         List.of(new Connection()),
-                        1L,
+                        1,
                         1
                 ));
         //act
         InvitesReceivedCommand command = new InvitesReceivedCommand(userId,paginationRequest);
 
-        PaginationResponse<Connection> response = useCase.execute(command);
+        PaginationResponseDTO<Connection> response = useCase.execute(command);
 
         //assert
         Assertions.assertNotNull(response);
@@ -66,9 +63,9 @@ public class GetInvitesReceivedUseCaseTest {
 
         //arrange
         Mockito.when(connectionGateway.getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.pending)))
-                .thenReturn(new PaginationResponse<>(
+                .thenReturn(new PaginationResponseDTO<>(
                         Collections.emptyList(),
-                        1L,
+                        1,
                         1
                 ));
 

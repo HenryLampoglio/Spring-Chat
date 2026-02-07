@@ -9,7 +9,5 @@ import org.mapstruct.Mapping;
 public interface SendInviteMapper {
 
     @Mapping(source = "id", target="connectionId")
-    @Mapping(source = "createdAt", target = "createdAt")
-    @Mapping(source = "updatedAt", target = "updatedAt")
     SendInviteResponseDTO toResponse(Connection connection);
 }

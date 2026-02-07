@@ -2,6 +2,7 @@ package com.example.SpringChat.infrastructure.user.adapter.controller;
 
 import com.example.SpringChat.application.user.command.CreateUserCommand;
 import com.example.SpringChat.application.user.command.LoginCommand;
+import com.example.SpringChat.application.user.output.LoginOutput;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.responseDTO.CreateUserResponseDTO;
@@ -46,7 +47,8 @@ public class AuthenticationController {
             request.getEmail(),
             request.getPassword()
         );
-        LoginResponseDTO response = loginInputPort.execute(command);
+        LoginOutput loginInfo = loginInputPort.execute(command);
+        LoginResponseDTO response = userPresenter.toLoginResponse(loginInfo);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
