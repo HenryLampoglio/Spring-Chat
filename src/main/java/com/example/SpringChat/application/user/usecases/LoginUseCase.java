@@ -7,7 +7,6 @@ import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesException;
 import com.example.SpringChat.core.user.exception.UserEmailNotFoundException;
 import com.example.SpringChat.core.user.gateway.UserGateway;
-import com.example.SpringChat.infrastructure.user.adapter.controller.dto.authentication.LoginResponse;
 
 public class LoginUseCase implements LoginInputPort {
     private final UserGateway userGateway;
