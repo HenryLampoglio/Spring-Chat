@@ -1,4 +1,7 @@
 package com.example.SpringChat.application.user.responseDTO;
 
-public class SearchUserResponseDTO {
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public record SearchUserResponseDTO(UUID id, String nickname, int publicIdentificationKey, LocalDateTime createdAt, LocalDateTime updatedAt) {
 }

@@ -1,10 +1,13 @@
 package com.example.SpringChat.infrastructure.user.adapter.controller.presenter;
 
 import com.example.SpringChat.application.user.responseDTO.CreateUserResponseDTO;
+import com.example.SpringChat.application.user.responseDTO.SearchUserResponseDTO;
 import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.infrastructure.user.adapter.controller.mapper.CreateUserMapper;
 import com.example.SpringChat.infrastructure.user.adapter.controller.mapper.SearchUserMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class UserPresenter {
@@ -19,5 +22,10 @@ public class UserPresenter {
 
     public CreateUserResponseDTO toCreateUserResponse(User domainResponse){
         return createUserMapper.toResponse(domainResponse);
+    }
+
+    public List<SearchUserResponseDTO> toSearchUsersListResponse(List<User> domainResponse)
+    {
+        return searchUserMapper.toSearchUsersListResponse(domainResponse);
     }
 }
