@@ -11,6 +11,6 @@ import org.mapstruct.Mapping;
 public interface UserFriendsMapper {
 
     @Mapping(source = "id", target = "connectionId")
-    @Mapping(source = "receiver", target = "receiverData")
+    @Mapping(source = "receiver", target = "userData")
     UserFriendsResponseDTO toResponse(Connection connection);
 }

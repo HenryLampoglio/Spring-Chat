@@ -5,5 +5,5 @@ import com.example.SpringChat.core.enums.ConnectionStatus;
 
 import java.util.UUID;
 
-public record InvitesReceivedResponseDTO(UUID connectionId, ConnectionStatus connectionStatus, UserDataResponseDTO requesterData) {
+public record InvitesReceivedResponseDTO(UUID connectionId, ConnectionStatus connectionStatus, UserDataResponseDTO userData) {
 }

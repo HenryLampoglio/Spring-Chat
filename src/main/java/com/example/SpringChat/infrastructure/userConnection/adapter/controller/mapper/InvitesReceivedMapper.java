@@ -10,6 +10,6 @@ import org.mapstruct.Mapping;
 public interface InvitesReceivedMapper {
 
     @Mapping(source = "id", target = "connectionId")
-    @Mapping(source = "requester", target = "requesterData")
+    @Mapping(source = "requester", target = "userData")
     InvitesReceivedResponseDTO toResponse(Connection connection);
 }

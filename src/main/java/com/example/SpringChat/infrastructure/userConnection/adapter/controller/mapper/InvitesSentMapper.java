@@ -11,6 +11,6 @@ import org.mapstruct.Mapping;
 public interface InvitesSentMapper {
 
     @Mapping(source = "id", target = "connectionId")
-    @Mapping(source = "receiver", target = "receiverData")
+    @Mapping(source = "receiver", target = "userData")
     InvitesSentResponseDTO toResponse(Connection connection);
 }
