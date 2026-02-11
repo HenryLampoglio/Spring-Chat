@@ -80,7 +80,7 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
 
         return new PaginationResponseDTO<>(
             connectionsCore,
-            entityList.getTotalPages(),
+            entityList.getNumber(),
             entityList.getTotalPages()
         );
     }
@@ -95,7 +95,7 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
 
         return  new PaginationResponseDTO<>(
                 sentInvitesConnectionCore,
-                entityList.getTotalPages(),
+                entityList.getNumber(),
                 entityList.getTotalPages()
         );
     }
@@ -110,7 +110,7 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
 
         return  new PaginationResponseDTO<>(
                 sentInvitesConnectionCore,
-                entityList.getTotalPages(),
+                entityList.getNumber(),
                 entityList.getTotalPages()
         );
     }
