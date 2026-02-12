@@ -80,7 +80,8 @@ public class ConnectionInfoController {
         PaginationRequest paginationRequest = new PaginationRequest(pageable.getPageNumber(), pageable.getPageSize());
         UserFriendsCommand command = new UserFriendsCommand(user.getId(), paginationRequest);
         PaginationResponseDTO<Connection> foundConnections = userFriendsInputPort.execute(command);
-        PaginationResponseDTO<UserFriendsResponseDTO> response = foundConnections.map(connectionInfoPresenter::toUserFriendsResponse);
+        PaginationResponseDTO<UserFriendsResponseDTO> response = foundConnections
+                .map(connection -> this.connectionInfoPresenter.toUserFriendsResponse(connection, user.getId()));
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

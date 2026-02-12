@@ -10,6 +10,8 @@ import com.example.SpringChat.infrastructure.userConnection.adapter.controller.m
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.mapper.UserFriendsMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class ConnectionInfoPresenter {
     private final InvitesSentMapper invitesSentMapper;
@@ -30,7 +32,7 @@ public class ConnectionInfoPresenter {
         return invitesReceivedMapper.toResponse(domainResponse);
     }
 
-    public UserFriendsResponseDTO toUserFriendsResponse(Connection domainResponse){
-        return userFriendsMapper.toResponse(domainResponse);
+    public UserFriendsResponseDTO toUserFriendsResponse(Connection domainResponse, UUID userId){
+        return userFriendsMapper.toResponse(domainResponse, userId);
     }
 }
