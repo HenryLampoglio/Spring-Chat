@@ -4,7 +4,7 @@ package com.example.SpringChat.application.connection.usecases;
 import com.example.SpringChat.application.connection.usecase.RetrieveUserFriendsUseCase;
 import com.example.SpringChat.application.connection.command.UserFriendsCommand;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
-import com.example.SpringChat.application.shared.response.PaginationResponse;
+import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import org.junit.jupiter.api.Assertions;
@@ -43,15 +43,15 @@ class RetrieveUserFriendsUseCaseTest { // 2. RENAME this class (Added 'Test' suf
     @Test
     void shouldReturnFriendsSuccessfully() {
         Mockito.when(connectionGateway.searchUsers(any(), eq(paginationRequest)))
-                .thenReturn(new PaginationResponse<>(
+                .thenReturn(new PaginationResponseDTO<>(
                         List.of(new Connection()),
-                        1L,
+                        1,
                         1
                 ));
 
-       PaginationResponse<Connection> response = useCase.execute(command);
+       PaginationResponseDTO<Connection> response = useCase.execute(command);
 
-        Assertions.assertNotNull(response.getItems());
+        Assertions.assertNotNull(response.items());
         Mockito.verify(connectionGateway, Mockito.times(1)).searchUsers(any(), eq(paginationRequest));
     }
 

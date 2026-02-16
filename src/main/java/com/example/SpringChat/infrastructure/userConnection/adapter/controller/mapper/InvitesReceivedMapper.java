@@ -1,0 +1,15 @@
+package com.example.SpringChat.infrastructure.userConnection.adapter.controller.mapper;
+
+import com.example.SpringChat.application.connection.responseDTO.InvitesReceivedResponseDTO;
+import com.example.SpringChat.core.connection.entity.Connection;
+import com.example.SpringChat.infrastructure.user.adapter.controller.mapper.UserMapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
+public interface InvitesReceivedMapper {
+
+    @Mapping(source = "id", target = "connectionId")
+    @Mapping(source = "requester", target = "userData")
+    InvitesReceivedResponseDTO toResponse(Connection connection);
+}

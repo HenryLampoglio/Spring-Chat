@@ -19,10 +19,16 @@ public interface SpringConnectionRepository extends JpaRepository<ConnectionEnti
     @Query(value = "SELECT DISTINCT c FROM ConnectionEntity c " +
             "LEFT JOIN FETCH c.requester " +
             "LEFT JOIN FETCH c.receiver " +
-            "WHERE c.requester.id = :userId OR c.receiver.id = :userId AND c.connectionStatus = :connectionAccepted",
+            "WHERE (c.requester.id = :userId OR c.receiver.id = :userId) " +
+            "AND c.connectionStatus = :connectionAccepted",
             countQuery = "SELECT count(c) FROM ConnectionEntity c " +
-                    "WHERE c.requester.id = :userId OR c.receiver.id = :userId")
-    Page<ConnectionEntity> findAllByUserIdOrFriendIdWithUsers(@Param("connectionAccepted") ConnectionStatus status,@Param("userId") UUID userId, Pageable pageable);
+                    "WHERE (c.requester.id = :userId OR c.receiver.id = :userId) " +
+                    "AND c.connectionStatus = :connectionAccepted")
+    Page<ConnectionEntity> findAllByUserIdOrFriendIdWithUsers(
+            @Param("connectionAccepted") ConnectionStatus status,
+            @Param("userId") UUID userId,
+            Pageable pageable
+    );
 
     @Query("SELECT c FROM ConnectionEntity c " +
             "LEFT JOIN FETCH c.requester " +
