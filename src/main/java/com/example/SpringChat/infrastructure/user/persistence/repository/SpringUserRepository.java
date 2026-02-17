@@ -17,10 +17,13 @@ public interface SpringUserRepository extends JpaRepository<UserEntity, UUID> {
     boolean existsByPublicIdentificationKey(int publicIdentificationKey);
     Optional<UserEntity> findByEmail(String email);
 
-    @Query("Select u FROM UserEntity u WHERE " +
-        "(:nickname = '' OR u.nickname LIKE CONCAT('%', :nickname, '%')) AND " +
-        "(:publicIdentificationKey = 0 OR u.publicIdentificationKey = :publicIdentificationKey) AND " +
-        "u.id != :userId")
+    @Query("SELECT u FROM UserEntity u WHERE " +
+            "u.id != :userId AND " +
+            "(:nickname = '' OR u.nickname LIKE CONCAT('%', :nickname, '%')) AND " +
+            "(:publicIdentificationKey = 0 OR u.publicIdentificationKey = :publicIdentificationKey) AND " +
+            "NOT EXISTS (SELECT 1 FROM ConnectionEntity c WHERE " +
+            "  (c.requester.id = :userId AND c.receiver.id = u.id) OR " +
+            "  (c.receiver.id = :userId AND c.requester.id = u.id))")
     List<UserEntity> findTop10NicknameContainingAndPublicIdentificationKeyContaining(
             @Param("nickname") String nickname,
             @Param("publicIdentificationKey") int publicIdentificationKey,

@@ -52,10 +52,11 @@ public class ConnectionActionController {
 
     @PatchMapping("/accept-invite/{id}")
     public ResponseEntity<AcceptInviteResponseDTO> acceptInvite(
-            @PathVariable UUID id
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserEntity user
     )
     {
-        AcceptInviteCommand command = new AcceptInviteCommand(id);
+        AcceptInviteCommand command = new AcceptInviteCommand(id, user.getId());
         Connection connection = acceptInvitePort.execute(command);
         AcceptInviteResponseDTO response = connectionActionPresenter.toAcceptInvitesResponse(connection);
 

@@ -19,7 +19,9 @@ public interface ConnectionGateway {
 
     void cancelConnection(UUID connectionId);
 
-    Optional<Connection> acceptInvite(UUID connectionId, ConnectionStatus status);
+    Optional<Connection> getInviteById(UUID connectionId, ConnectionStatus status);
+
+    Connection acceptInvite(UUID connectionId);
 
     PaginationResponseDTO<Connection> searchUsers(UUID userId, PaginationRequest paginationRequest);
 

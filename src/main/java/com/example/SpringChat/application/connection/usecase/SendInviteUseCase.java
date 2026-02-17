@@ -3,6 +3,7 @@ package com.example.SpringChat.application.connection.usecase;
 import com.example.SpringChat.application.connection.command.SendInviteCommand;
 import com.example.SpringChat.application.connection.port.SendInvitePort;
 import com.example.SpringChat.core.connection.entity.Connection;
+import com.example.SpringChat.core.connection.exception.DuplicatedUsersIdConnectionException;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.enums.ConnectionStatus;
 import com.example.SpringChat.core.user.exception.UserNotFoundException;
@@ -21,6 +22,8 @@ public class SendInviteUseCase implements SendInvitePort {
     @Override
     public Connection execute(SendInviteCommand command){
         if(!userGateway.userExists(command.receiverId())) throw new UserNotFoundException("Usuário não encontrado");
+
+        if(command.requesterId().equals(command.receiverId())) throw new DuplicatedUsersIdConnectionException("User can't send invite to himself");
 
         return connectionGateway.sendInvite(command.requesterId(), command.receiverId(), ConnectionStatus.pending);
 

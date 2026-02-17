@@ -9,6 +9,7 @@ import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
 import com.example.SpringChat.infrastructure.userConnection.persistence.entity.ConnectionEntity;
 import com.example.SpringChat.infrastructure.userConnection.persistence.repository.SpringConnectionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,18 +56,22 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
     }
 
     @Override
-    public Optional<Connection> acceptInvite(UUID id,ConnectionStatus status)
+    public Optional<Connection> getInviteById(UUID connectionId, ConnectionStatus status){
+        Optional<ConnectionEntity> entity = this.springConnectionRepository.findByIdAndConnectionStatus(connectionId,status);
+
+        return entity.map(ConnectionEntity::toCoreConnection);
+
+    }
+
+    @Override
+    public Connection acceptInvite(UUID id)
     {
-        Optional<ConnectionEntity> entity = this.springConnectionRepository.findByIdAndConnectionStatus(id,status);
+        ConnectionEntity entity = this.springConnectionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Conexão não encontrada"));
 
-        if(entity.isPresent()){
-            entity.get().setConnectionStatus(ConnectionStatus.accepted);
+        entity.setConnectionStatus(ConnectionStatus.accepted);
 
-            ConnectionEntity updatedEntity = this.springConnectionRepository.save(entity.get());
-            return Optional.of(updatedEntity.toCoreConnection());
-        }
-
-        return Optional.empty();
+        return this.springConnectionRepository.save(entity).toCoreConnection();
     }
 
     @Override

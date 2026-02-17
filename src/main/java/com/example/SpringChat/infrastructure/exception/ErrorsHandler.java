@@ -1,6 +1,8 @@
 package com.example.SpringChat.infrastructure.exception;
 
 import com.example.SpringChat.core.connection.exception.ConnectionsNotFoundException;
+import com.example.SpringChat.core.connection.exception.DuplicatedUsersIdConnectionException;
+import com.example.SpringChat.core.connection.exception.ForbiddenAcceptInviteException;
 import com.example.SpringChat.core.connection.exception.InvitesSolicitationsNotFoundException;
 import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesException;
 import com.example.SpringChat.core.user.exception.UserEmailAlreadyExistsException;
@@ -83,5 +85,28 @@ public class ErrorsHandler {
         body.put("path", request.getDescription(false).replace("uri=", ""));
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(DuplicatedUsersIdConnectionException.class)
+    public ResponseEntity<Object> handleDuplicatedUsersIdConnectionException(DuplicatedUsersIdConnectionException exception, WebRequest request){
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("message", exception.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ForbiddenAcceptInviteException.class)
+    public  ResponseEntity<Object> handleForbiddenAcceptInviteException(ForbiddenAcceptInviteException exception, WebRequest request){
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNPROCESSABLE_ENTITY.value());
+        body.put("message", exception.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

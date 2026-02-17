@@ -31,30 +31,32 @@ public class AcceptInviteUseCaseTest {
     @Test
     void shouldAcceptInviteSuccessfully(){
         UUID connectionId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
 
         //arrange
-        Mockito.when(connectionGateway.acceptInvite(eq(connectionId), eq(ConnectionStatus.pending)))
-                .thenReturn(Optional.of(new Connection()));
+        Mockito.when(connectionGateway.getInviteById(eq(connectionId), eq(ConnectionStatus.pending)));
+        Mockito.when(connectionGateway.acceptInvite(eq(connectionId)))
+                .thenReturn(new Connection());
 
         //act
-        AcceptInviteCommand command = new AcceptInviteCommand(connectionId);
+        AcceptInviteCommand command = new AcceptInviteCommand(connectionId,userId);
         Connection response = useCase.execute(command);
 
         //assert
         Assertions.assertNotNull(response);
-        Mockito.verify(connectionGateway, Mockito.times(1)).acceptInvite(eq(connectionId), eq(ConnectionStatus.pending));
+        Mockito.verify(connectionGateway, Mockito.times(1)).getInviteById(eq(connectionId), eq(ConnectionStatus.pending));
+        Mockito.verify(connectionGateway, Mockito.times(1)).acceptInvite(eq(connectionId));
     }
 
     @Test
     void shouldThrowExceptionConnectionsNotFoundException(){
         UUID connectionId = UUID.randomUUID();
-
+        UUID userId = UUID.randomUUID();
         //arrange
-        Mockito.when(connectionGateway.acceptInvite(eq(connectionId), eq(ConnectionStatus.pending)))
-                .thenReturn(Optional.empty());
+        Mockito.when(connectionGateway.getInviteById(eq(connectionId), eq(ConnectionStatus.pending)));
 
         //act
-        AcceptInviteCommand command = new AcceptInviteCommand(connectionId);
+        AcceptInviteCommand command = new AcceptInviteCommand(connectionId, userId);
 
         String message = Assertions.assertThrows(ConnectionsNotFoundException.class, () ->{
             useCase.execute(command);
@@ -62,6 +64,6 @@ public class AcceptInviteUseCaseTest {
 
         //
         Assertions.assertEquals("this request doesn't exist or doesn't have the pending status", message);
-        Mockito.verify(connectionGateway, Mockito.times(1)).acceptInvite(eq(connectionId), eq(ConnectionStatus.pending));
+        Mockito.verify(connectionGateway, Mockito.times(1)).getInviteById(eq(connectionId), eq(ConnectionStatus.pending));
     }
 }
