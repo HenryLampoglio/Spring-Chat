@@ -38,7 +38,7 @@ public class SendInviteUseCaseTest {
        //arrange
        Mockito.when(userGateway.userExists(eq(receiverId))).thenReturn(true);
 
-       Mockito.when(connectionGateway.sendInvite(eq(requesterId), eq(receiverId), eq(ConnectionStatus.pending)))
+       Mockito.when(connectionGateway.sendInvite(eq(requesterId), eq(receiverId), eq(ConnectionStatus.PENDING)))
                .thenReturn(new Connection());
 
        //act
@@ -50,7 +50,7 @@ public class SendInviteUseCaseTest {
        Assertions.assertNotNull(response);
 
        Mockito.verify(userGateway, Mockito.times(1)).userExists(eq(receiverId));
-       Mockito.verify(connectionGateway, Mockito.times(1)).sendInvite(eq(requesterId), eq(receiverId), eq(ConnectionStatus.pending));
+       Mockito.verify(connectionGateway, Mockito.times(1)).sendInvite(eq(requesterId), eq(receiverId), eq(ConnectionStatus.PENDING));
    }
 
    @Test
@@ -71,6 +71,6 @@ public class SendInviteUseCaseTest {
        //assert
        Assertions.assertEquals("Usuário não encontrado", message);
        Mockito.verify(userGateway, Mockito.times(1)).userExists(eq(receiverId));
-       Mockito.verify(connectionGateway, Mockito.times(0)).sendInvite(eq(requesterId), eq(receiverId), eq(ConnectionStatus.pending));
+       Mockito.verify(connectionGateway, Mockito.times(0)).sendInvite(eq(requesterId), eq(receiverId), eq(ConnectionStatus.PENDING));
    }
 }

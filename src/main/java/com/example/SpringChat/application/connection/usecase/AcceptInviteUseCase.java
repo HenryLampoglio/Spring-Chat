@@ -16,7 +16,7 @@ public class AcceptInviteUseCase implements AcceptInvitePort {
 
     @Override
     public Connection execute(AcceptInviteCommand command){
-        Connection connection = connectionGateway.getInviteById(command.id(), ConnectionStatus.pending)
+        Connection connection = connectionGateway.getInviteById(command.id(), ConnectionStatus.PENDING)
                 .orElseThrow(() -> new ConnectionsNotFoundException("this request doesn't exist or doesn't have the pending status"));
 
         if(!connection.getReceiver().getId().equals(command.userId())) throw new ForbiddenAcceptInviteException("Você só pode aceitar convites que foram enviados para você");

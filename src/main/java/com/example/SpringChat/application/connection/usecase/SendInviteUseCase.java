@@ -25,7 +25,7 @@ public class SendInviteUseCase implements SendInvitePort {
 
         if(command.requesterId().equals(command.receiverId())) throw new DuplicatedUsersIdConnectionException("User can't send invite to himself");
 
-        return connectionGateway.sendInvite(command.requesterId(), command.receiverId(), ConnectionStatus.pending);
+        return connectionGateway.sendInvite(command.requesterId(), command.receiverId(), ConnectionStatus.PENDING);
 
     }
 }

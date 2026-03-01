@@ -69,7 +69,7 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
         ConnectionEntity entity = this.springConnectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Conexão não encontrada"));
 
-        entity.setConnectionStatus(ConnectionStatus.accepted);
+        entity.setConnectionStatus(ConnectionStatus.ACCEPTED);
 
         return this.springConnectionRepository.save(entity).toCoreConnection();
     }
@@ -79,7 +79,7 @@ public class ConnectionGatewayAdapter implements ConnectionGateway {
 
         Pageable springPageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());
 
-        Page<ConnectionEntity> entityList = springConnectionRepository.findAllByUserIdOrFriendIdWithUsers(ConnectionStatus.accepted, userId, springPageable);
+        Page<ConnectionEntity> entityList = springConnectionRepository.findAllByUserIdOrFriendIdWithUsers(ConnectionStatus.ACCEPTED, userId, springPageable);
 
         List<Connection> connectionsCore = entityList.stream().map(ConnectionEntity::toCoreConnection).toList();
 

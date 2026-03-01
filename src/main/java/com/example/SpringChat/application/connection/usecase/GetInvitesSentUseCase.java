@@ -18,7 +18,7 @@ public class GetInvitesSentUseCase implements InvitesSentInputPort {
     public PaginationResponseDTO<Connection> execute(InvitesSentCommand command){
         PaginationRequest paginationRequest = command.paginationRequest();
 
-        PaginationResponseDTO<Connection> pendingSentConnections = connectionGateway.getInvitesSentByUser(command.userId(), paginationRequest, ConnectionStatus.pending);
+        PaginationResponseDTO<Connection> pendingSentConnections = connectionGateway.getInvitesSentByUser(command.userId(), paginationRequest, ConnectionStatus.PENDING);
 
         if(pendingSentConnections.items().isEmpty()){
             throw new InvitesSolicitationsNotFoundException("Não existe nenhum convite pendente enviado por você");
