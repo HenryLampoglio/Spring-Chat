@@ -1,11 +1,11 @@
-package com.example.SpringChat.infrastructure.chat;
+package com.example.SpringChat.infrastructure.chat.socket;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class ChatController {
+public class ChatSocketController {
 
     public record DTOMessage(String content){}
 

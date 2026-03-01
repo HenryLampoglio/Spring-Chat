@@ -8,5 +8,4 @@ import java.util.Locale;
 public enum ConnectionStatus {
     accepted,
     pending,
-    blocked;
 }

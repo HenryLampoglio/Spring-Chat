@@ -12,6 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
   dynamodb-local:
     image: amazon/dynamodb-local:latest
     container_name: dynamodb-local
@@ -21,8 +22,10 @@ services:
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
+
   dynamodb-admin:
     image: aaronshaf/dynamodb-admin
+    container_name: dynamodb-admin
     ports:
       - "8001:8001"
     environment:
@@ -31,5 +34,29 @@ services:
     depends_on:
       - dynamodb-local
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis-chat
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq-chat
+    restart: always
+    ports:
+      - "5672:5672"   # Porta do protocolo AMQP
+      - "15672:15672" # Interface de Gerenciamento (Web UI)
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   postgres_data:
+  redis_data:
+  rabbitmq_data:
