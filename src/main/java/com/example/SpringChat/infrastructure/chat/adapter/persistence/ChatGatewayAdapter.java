@@ -57,4 +57,14 @@ public class ChatGatewayAdapter implements ChatGateway {
 
         return savedChat.toCoreChat();
     }
+
+    @Override
+    public Boolean verifyUserChatAccess(String userEmail, String chatId){
+        try {
+            UUID chatUuid = UUID.fromString(chatId);
+            return springUserChatRepository.existsByUserEmailAndChatId(userEmail, chatUuid);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 }

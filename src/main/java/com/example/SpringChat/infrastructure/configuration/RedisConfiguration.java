@@ -1,5 +1,6 @@
 package com.example.SpringChat.infrastructure.configuration;
 
+import com.example.SpringChat.infrastructure.messaging.redis.RedisMessageForwarder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
@@ -26,25 +27,14 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public MessageListener globalRedisListener(SimpMessagingTemplate messagingTemplate) {
-        return (message, pattern) -> {
-            String body = new String(message.getBody(), StandardCharsets.UTF_8);
-
-            String channel = new String(message.getChannel(), StandardCharsets.UTF_8);
-
-            messagingTemplate.convertAndSend("/topic/" + channel, body);
-        };
-    }
-
-    @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
             RedisConnectionFactory factory,
-            MessageListener globalRedisListener) { // O Spring injeta o bean criado acima
+            RedisMessageForwarder forwarder) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(factory);
 
-        container.addMessageListener(globalRedisListener, new PatternTopic("chat.*"));
+        container.addMessageListener(forwarder, new PatternTopic("chat.*"));
 
         return container;
     }

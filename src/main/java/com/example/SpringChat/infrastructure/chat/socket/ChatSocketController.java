@@ -10,7 +10,7 @@ public class ChatSocketController {
     public record DTOMessage(String content){}
 
     @MessageMapping("/hello")
-    @SendTo("/topic/messages")
+    @SendTo("/topic/messages/{id}")
     public DTOMessage hello(DTOMessage message){
         return new DTOMessage("Echo: " + message.content());
     }

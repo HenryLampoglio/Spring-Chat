@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface ChatGateway {
     Optional<Chat> findPersonalChatByUsers(UUID userIdA, UUID userIdB);
     Chat createPersonalChat(UUID userIdA, UUID userIdB);
+    Boolean verifyUserChatAccess(String userEmail, String chatId);
 }

@@ -1,7 +1,9 @@
 package com.example.SpringChat.infrastructure.configuration;
 
 import com.example.SpringChat.application.chat.port.FindOrCreatePersonalChatInputPort;
+import com.example.SpringChat.application.chat.port.ValidateChatAccessInputPort;
 import com.example.SpringChat.application.chat.usecase.FindOrCreatePersonalChatUseCase;
+import com.example.SpringChat.application.chat.usecase.ValidateChatAccessUseCase;
 import com.example.SpringChat.application.connection.port.*;
 import com.example.SpringChat.application.connection.usecase.*;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
@@ -87,5 +89,10 @@ public class AppConfig {
     @Bean
     FindOrCreatePersonalChatInputPort findOrCreatePersonalChatInputPort(ChatGateway chatGateway){
         return new FindOrCreatePersonalChatUseCase(chatGateway);
+    }
+
+    @Bean
+    ValidateChatAccessInputPort validateChatAccessInputPort(ChatGateway chatGateway){
+        return new ValidateChatAccessUseCase(chatGateway);
     }
 }

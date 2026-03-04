@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface SpringUserChatRepository extends JpaRepository<UserChatEntity, UUID> {
+    boolean existsByUserEmailAndChatId(String email, UUID chatId);
 }
