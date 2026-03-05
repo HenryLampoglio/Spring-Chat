@@ -13,7 +13,7 @@ public class ValidateChatAccessUseCase implements ValidateChatAccessInputPort {
 
     @Override
     public void execute(ValidateChatAccessCommand command){
-        Boolean hasAccess = chatGateway.verifyUserChatAccess(command.userEmail(), command.chatId());
+        Boolean hasAccess = chatGateway.verifyUserChatAccess(command.userId(), command.chatId());
 
         if (!hasAccess) {
             throw new ChatAccessDeniedException(command.chatId());

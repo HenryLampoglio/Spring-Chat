@@ -17,6 +17,7 @@ import org.springframework.util.AntPathMatcher;
 
 import java.security.Principal;
 import java.util.Collections;
+import java.util.Objects;
 
 
 @Component
@@ -53,6 +54,7 @@ public class WebSocketSecurityInterceptor implements ChannelInterceptor {
 
         String token = authHeader.substring(BEARER_PREFIX.length());
         String username = tokenService.validateToken(token);
+        String nickname = tokenService.getNicknameFromToken(token);
 
         if (username == null) {
             throw new MessageDeliveryException("Sessão inválida ou expirada");
@@ -60,6 +62,8 @@ public class WebSocketSecurityInterceptor implements ChannelInterceptor {
 
         var auth = new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
         accessor.setUser(auth);
+
+        Objects.requireNonNull(accessor.getSessionAttributes()).put("nickname", nickname);
     }
 
     private void handleSubscribe(StompHeaderAccessor accessor) {

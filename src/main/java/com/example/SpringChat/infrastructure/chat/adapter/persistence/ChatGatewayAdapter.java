@@ -59,10 +59,11 @@ public class ChatGatewayAdapter implements ChatGateway {
     }
 
     @Override
-    public Boolean verifyUserChatAccess(String userEmail, String chatId){
+    public Boolean verifyUserChatAccess(String userId, String chatId){
         try {
+            UUID userUuId = UUID.fromString(userId);
             UUID chatUuid = UUID.fromString(chatId);
-            return springUserChatRepository.existsByUserEmailAndChatId(userEmail, chatUuid);
+            return springUserChatRepository.existsByUserIdAndChatId(userUuId, chatUuid);
         } catch (IllegalArgumentException e) {
             return false;
         }
