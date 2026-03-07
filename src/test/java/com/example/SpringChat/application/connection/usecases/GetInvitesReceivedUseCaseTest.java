@@ -41,7 +41,7 @@ public class GetInvitesReceivedUseCaseTest {
 
         //arrange
 
-        Mockito.when(connectionGateway.getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.pending)))
+        Mockito.when(connectionGateway.getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.PENDING)))
                 .thenReturn(new PaginationResponseDTO<>(
                         List.of(new Connection()),
                         1,
@@ -54,7 +54,7 @@ public class GetInvitesReceivedUseCaseTest {
 
         //assert
         Assertions.assertNotNull(response);
-        Mockito.verify(connectionGateway,Mockito.times(1)).getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.pending));
+        Mockito.verify(connectionGateway,Mockito.times(1)).getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.PENDING));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class GetInvitesReceivedUseCaseTest {
         UUID userId = UUID.randomUUID();
 
         //arrange
-        Mockito.when(connectionGateway.getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.pending)))
+        Mockito.when(connectionGateway.getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.PENDING)))
                 .thenReturn(new PaginationResponseDTO<>(
                         Collections.emptyList(),
                         1,
@@ -78,6 +78,6 @@ public class GetInvitesReceivedUseCaseTest {
 
         //assert
         Assertions.assertEquals("Não existe nenhum convite pendente para você", message);
-        Mockito.verify(connectionGateway,Mockito.times(1)).getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.pending));
+        Mockito.verify(connectionGateway,Mockito.times(1)).getInvitesReceivedByUser(eq(userId),eq(paginationRequest),eq(ConnectionStatus.PENDING));
     }
 }

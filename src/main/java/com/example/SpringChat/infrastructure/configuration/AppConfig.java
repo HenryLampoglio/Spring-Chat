@@ -1,5 +1,12 @@
 package com.example.SpringChat.infrastructure.configuration;
 
+import com.example.SpringChat.application.chat.gateways.MessageBrokerGateway;
+import com.example.SpringChat.application.chat.port.FindOrCreatePersonalChatInputPort;
+import com.example.SpringChat.application.chat.port.SendMessageInputPort;
+import com.example.SpringChat.application.chat.port.ValidateChatAccessInputPort;
+import com.example.SpringChat.application.chat.usecase.FindOrCreatePersonalChatUseCase;
+import com.example.SpringChat.application.chat.usecase.SendMessageUseCase;
+import com.example.SpringChat.application.chat.usecase.ValidateChatAccessUseCase;
 import com.example.SpringChat.application.connection.port.*;
 import com.example.SpringChat.application.connection.usecase.*;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
@@ -8,6 +15,7 @@ import com.example.SpringChat.application.user.port.SearchUsersInputPort;
 import com.example.SpringChat.application.user.usecases.CreateUserUseCase;
 import com.example.SpringChat.application.user.usecases.LoginUseCase;
 import com.example.SpringChat.application.user.usecases.SearchUsersUseCase;
+import com.example.SpringChat.core.chat.gateway.ChatGateway;
 import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
@@ -79,5 +87,20 @@ public class AppConfig {
 
     @Bean InvitesReceivedInputPort invitesReceivedInputPort(ConnectionGateway connectionGateway){
         return new GetInvitesReceivedUseCase(connectionGateway);
+    }
+
+    @Bean
+    FindOrCreatePersonalChatInputPort findOrCreatePersonalChatInputPort(ChatGateway chatGateway){
+        return new FindOrCreatePersonalChatUseCase(chatGateway);
+    }
+
+    @Bean
+    ValidateChatAccessInputPort validateChatAccessInputPort(ChatGateway chatGateway){
+        return new ValidateChatAccessUseCase(chatGateway);
+    }
+
+    @Bean
+    SendMessageInputPort sendMessageInputPort(ChatGateway chatGateway, MessageBrokerGateway messageBrokerGateway){
+        return new SendMessageUseCase(chatGateway, messageBrokerGateway);
     }
 }

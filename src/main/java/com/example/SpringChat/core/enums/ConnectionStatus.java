@@ -6,7 +6,5 @@ import lombok.Getter;
 import java.util.Locale;
 
 public enum ConnectionStatus {
-    accepted,
-    pending,
-    blocked;
+    ACCEPTED, PENDING
 }

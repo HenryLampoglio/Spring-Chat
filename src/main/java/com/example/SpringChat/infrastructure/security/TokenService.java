@@ -24,7 +24,8 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("spring-chat")
-                    .withSubject(user.getEmail())
+                    .withSubject(user.getId().toString())
+                    .withClaim("nickname", user.getNickname())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
 
@@ -49,5 +50,18 @@ public class TokenService {
 
     private Instant genExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    public String getNicknameFromToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("spring-chat")
+                    .build()
+                    .verify(token)
+                    .getClaim("nickname").asString();
+        } catch (JWTVerificationException exception){
+            throw new RuntimeException("Erro ao extrair o nickname do token", exception);
+        }
     }
 }
