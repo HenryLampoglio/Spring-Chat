@@ -21,8 +21,6 @@ public class ChatSocketController {
         this.sendMessageInputPort = sendMessageInputPort;
     }
 
-    public record DTOMessage(String content) {}
-
     @MessageMapping("/chat/{chatId}/send")
     public void sendMessage(@DestinationVariable UUID chatId,
                             SendMessageRequest message,

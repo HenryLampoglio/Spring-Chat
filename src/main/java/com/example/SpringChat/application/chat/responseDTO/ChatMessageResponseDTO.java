@@ -8,5 +8,5 @@ public record ChatMessageResponseDTO(
         String senderId,
         String senderNickname,
         String content,
-        LocalDateTime timestamp
+        String createdAt
 ) {}

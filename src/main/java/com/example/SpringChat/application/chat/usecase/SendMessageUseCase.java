@@ -29,12 +29,14 @@ public class SendMessageUseCase implements SendMessageInputPort {
 
 //        Message savedMessage = chatGateway.saveMessage(message);
 
+        String formatedDate = java.time.LocalDateTime.now().toString();
+
         ChatMessageResponseDTO responsePayload = new ChatMessageResponseDTO(
                 command.chatId(),
                 command.senderId(),
                 command.senderNickname(),
                 command.message(),
-                LocalDateTime.now()
+                formatedDate
         );
 
         // 4. Define o canal de destino e publica no Redis
