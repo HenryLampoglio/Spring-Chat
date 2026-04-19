@@ -1,0 +1,73 @@
+{
+  "rabbit_version": "3.12",
+  "users": [],
+  "vhosts": [
+    { "name": "/" }
+  ],
+  "permissions": [
+    {
+      "user": "user",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "exchange.direta",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "exchange.dlq",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "fila.nosql",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "exchange.dlq",
+        "x-dead-letter-routing-key": "rota.erro"
+      }
+    },
+    {
+      "name": "fila.erros.nosql",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "exchange.direta",
+      "vhost": "/",
+      "destination": "fila.nosql",
+      "destination_type": "queue",
+      "routing_key": "rota.salvar.nosql",
+      "arguments": {}
+    },
+    {
+      "source": "exchange.dlq",
+      "vhost": "/",
+      "destination": "fila.erros.nosql",
+      "destination_type": "queue",
+      "routing_key": "rota.erro",
+      "arguments": {}
+    }
+  ]
+}
