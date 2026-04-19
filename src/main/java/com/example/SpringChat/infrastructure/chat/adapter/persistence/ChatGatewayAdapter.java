@@ -11,6 +11,7 @@ import com.example.SpringChat.infrastructure.chat.persistence.repository.SpringU
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
 import com.example.SpringChat.core.user.exception.UserNotFoundException;
+import com.github.f4b6a3.ulid.UlidCreator;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,5 +68,10 @@ public class ChatGatewayAdapter implements ChatGateway {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    @Override
+    public String generateNewMessageUlid(){
+        return UlidCreator.getMonotonicUlid().toString();
     }
 }

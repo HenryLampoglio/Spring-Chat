@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record ChatMessageResponseDTO(
         UUID chatId,
-        String senderId,
+        UUID senderId,
         String senderNickname,
         String content,
         String createdAt

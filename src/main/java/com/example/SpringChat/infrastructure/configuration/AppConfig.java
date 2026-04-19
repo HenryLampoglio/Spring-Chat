@@ -1,6 +1,6 @@
 package com.example.SpringChat.infrastructure.configuration;
 
-import com.example.SpringChat.application.chat.gateways.MessageBrokerGateway;
+import com.example.SpringChat.application.chat.gateway.MessageBrokerGateway;
 import com.example.SpringChat.application.chat.port.FindOrCreatePersonalChatInputPort;
 import com.example.SpringChat.application.chat.port.SendMessageInputPort;
 import com.example.SpringChat.application.chat.port.ValidateChatAccessInputPort;
@@ -9,6 +9,10 @@ import com.example.SpringChat.application.chat.usecase.SendMessageUseCase;
 import com.example.SpringChat.application.chat.usecase.ValidateChatAccessUseCase;
 import com.example.SpringChat.application.connection.port.*;
 import com.example.SpringChat.application.connection.usecase.*;
+import com.example.SpringChat.application.message.gateway.MessageDispatchGateway;
+import com.example.SpringChat.application.message.gateway.MessagePersistenceGateway;
+import com.example.SpringChat.application.message.port.SaveMessageInputPort;
+import com.example.SpringChat.application.message.usecase.SaveMessageUseCase;
 import com.example.SpringChat.application.user.port.CreateUserInputPort;
 import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.port.SearchUsersInputPort;
@@ -100,7 +104,12 @@ public class AppConfig {
     }
 
     @Bean
-    SendMessageInputPort sendMessageInputPort(ChatGateway chatGateway, MessageBrokerGateway messageBrokerGateway){
-        return new SendMessageUseCase(chatGateway, messageBrokerGateway);
+    SendMessageInputPort sendMessageInputPort(ChatGateway chatGateway, MessageBrokerGateway messageBrokerGateway, MessageDispatchGateway messageDispatchGateway){
+        return new SendMessageUseCase(chatGateway, messageBrokerGateway, messageDispatchGateway);
+    }
+
+    @Bean
+    SaveMessageInputPort saveMessageInputPort(MessagePersistenceGateway messagePersistenceGateway){
+        return new SaveMessageUseCase(messagePersistenceGateway);
     }
 }

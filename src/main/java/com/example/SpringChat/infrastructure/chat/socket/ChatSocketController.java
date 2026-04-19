@@ -27,7 +27,7 @@ public class ChatSocketController {
                             SimpMessageHeaderAccessor headerAccessor,
                             Principal principal) {
 
-        String senderId = principal.getName();
+        UUID senderId = UUID.fromString(principal.getName());
 
         String nickname = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("nickname");
 

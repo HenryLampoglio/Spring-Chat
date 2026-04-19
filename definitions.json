@@ -1,6 +1,12 @@
 {
   "rabbit_version": "3.12",
-  "users": [],
+  "users": [
+    {
+      "name": "user",
+      "password": "password",
+      "tags": "administrator"
+    }
+  ],
   "vhosts": [
     { "name": "/" }
   ],

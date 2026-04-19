@@ -2,5 +2,5 @@ package com.example.SpringChat.application.chat.command;
 
 import java.util.UUID;
 
-public record SendMessageCommand(UUID chatId, String senderId,String senderNickname, String message) {
+public record SendMessageCommand(UUID chatId, UUID senderId,String senderNickname, String message) {
 }

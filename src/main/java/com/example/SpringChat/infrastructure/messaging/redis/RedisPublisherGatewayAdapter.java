@@ -1,6 +1,6 @@
 package com.example.SpringChat.infrastructure.messaging.redis;
 
-import com.example.SpringChat.application.chat.gateways.MessageBrokerGateway;
+import com.example.SpringChat.application.chat.gateway.MessageBrokerGateway;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
