@@ -1,14 +1,9 @@
 package com.example.SpringChat.infrastructure.userConnection.adapter.controller;
 
-import com.example.SpringChat.application.connection.command.AcceptInviteCommand;
-import com.example.SpringChat.application.connection.command.CancelConnectionCommand;
-import com.example.SpringChat.application.connection.command.SendInviteCommand;
-import com.example.SpringChat.application.connection.port.*;
 import com.example.SpringChat.application.connection.responseDTO.AcceptInviteResponseDTO;
 import com.example.SpringChat.application.connection.responseDTO.SendInviteResponseDTO;
-import com.example.SpringChat.core.connection.entity.Connection;
+import com.example.SpringChat.application.connection.service.ConnectionService;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
-import com.example.SpringChat.infrastructure.userConnection.adapter.controller.presenter.ConnectionActionPresenter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,22 +24,11 @@ import java.util.UUID;
 @Tag(name = "Conexões - Ações", description = "Endpoints para envio, aceite e cancelamento de convites/conexões de amizade")
 @SecurityRequirement(name = "bearerAuth")
 public class ConnectionActionController {
-    private final SendInvitePort sendInvitePort;
-    private final CancelConnectionPort cancelConnectionPort;
-    private final AcceptInvitePort acceptInvitePort;
-    private final ConnectionActionPresenter connectionActionPresenter;
 
-    public ConnectionActionController(
-            SendInvitePort sendInvitePort,
-            CancelConnectionPort cancelConnectionPort,
-            AcceptInvitePort acceptInvitePort,
-            ConnectionActionPresenter connectionActionPresenter
+    private final ConnectionService connectionService;
 
-    ){
-        this.sendInvitePort = sendInvitePort;
-        this.cancelConnectionPort = cancelConnectionPort;
-        this.acceptInvitePort = acceptInvitePort;
-        this.connectionActionPresenter = connectionActionPresenter;
+    public ConnectionActionController(ConnectionService connectionService) {
+        this.connectionService = connectionService;
     }
 
     @PostMapping("/send-invite/{receiverId}")
@@ -61,12 +45,8 @@ public class ConnectionActionController {
             @PathVariable UUID receiverId,
             @Parameter(hidden = true)
             @AuthenticationPrincipal UserEntity requester
-    )
-    {
-        SendInviteCommand command = new SendInviteCommand(requester.getId(), receiverId);
-        Connection connection = sendInvitePort.execute(command);
-        SendInviteResponseDTO response = connectionActionPresenter.toSendInvitesResponse(connection);
-
+    ) {
+        SendInviteResponseDTO response = connectionService.sendInvite(requester.getId(), receiverId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -84,15 +64,10 @@ public class ConnectionActionController {
             @PathVariable UUID id,
             @Parameter(hidden = true)
             @AuthenticationPrincipal UserEntity user
-    )
-    {
-        AcceptInviteCommand command = new AcceptInviteCommand(id, user.getId());
-        Connection connection = acceptInvitePort.execute(command);
-        AcceptInviteResponseDTO response = connectionActionPresenter.toAcceptInvitesResponse(connection);
-
+    ) {
+        AcceptInviteResponseDTO response = connectionService.acceptInvite(id, user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
     @DeleteMapping("/cancel-connection/{id}")
     @Operation(summary = "Cancelar convite ou desfazer amizade", description = "Cancela um convite enviado/pendente ou desfaz uma conexão de amizade existente pelo ID da conexão.")
@@ -104,11 +79,8 @@ public class ConnectionActionController {
     public ResponseEntity<Void> cancelInvite(
             @Parameter(description = "UUID da conexão a ser cancelada", required = true)
             @PathVariable UUID id
-    )
-    {
-        CancelConnectionCommand command = new CancelConnectionCommand(id);
-        cancelConnectionPort.execute(command);
-
+    ) {
+        connectionService.cancelConnection(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

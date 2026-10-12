@@ -1,10 +1,7 @@
 package com.example.SpringChat.infrastructure.user.adapter.controller;
 
-import com.example.SpringChat.application.user.command.SearchUsersCommand;
-import com.example.SpringChat.application.user.port.SearchUsersInputPort;
 import com.example.SpringChat.application.user.responseDTO.SearchUserResponseDTO;
-import com.example.SpringChat.core.user.entity.User;
-import com.example.SpringChat.infrastructure.user.adapter.controller.presenter.UserPresenter;
+import com.example.SpringChat.application.user.service.UserService;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,12 +24,11 @@ import java.util.List;
 @Tag(name = "Usuários", description = "Endpoints para consulta e pesquisa de usuários")
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
-    private final SearchUsersInputPort searchUsersInputPort;
-    private final UserPresenter userPresenter;
 
-    public UserController(SearchUsersInputPort searchUsersInputPort, UserPresenter userPresenter){
-        this.searchUsersInputPort = searchUsersInputPort;
-        this.userPresenter = userPresenter;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/search")
@@ -48,12 +44,8 @@ public class UserController {
             String userIdentifier,
             @Parameter(hidden = true)
             @AuthenticationPrincipal UserEntity user
-    )
-    {
-        SearchUsersCommand command = new SearchUsersCommand(userIdentifier, user.getId());
-        List<User> foundUsers = searchUsersInputPort.execute(command);
-        List<SearchUserResponseDTO> response = userPresenter.toSearchUsersListResponse(foundUsers);
-
+    ) {
+        List<SearchUserResponseDTO> response = userService.searchUsers(userIdentifier, user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

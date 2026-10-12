@@ -1,16 +1,10 @@
 package com.example.SpringChat.infrastructure.user.adapter.controller;
 
-import com.example.SpringChat.application.user.command.CreateUserCommand;
-import com.example.SpringChat.application.user.command.LoginCommand;
-import com.example.SpringChat.application.user.output.LoginOutput;
-import com.example.SpringChat.application.user.port.CreateUserInputPort;
-import com.example.SpringChat.application.user.port.LoginInputPort;
 import com.example.SpringChat.application.user.responseDTO.CreateUserResponseDTO;
 import com.example.SpringChat.application.user.responseDTO.LoginResponseDTO;
-import com.example.SpringChat.core.user.entity.User;
+import com.example.SpringChat.application.user.service.UserService;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.authentication.CreateUserRequest;
 import com.example.SpringChat.infrastructure.user.adapter.controller.dto.authentication.LoginRequest;
-import com.example.SpringChat.infrastructure.user.adapter.controller.presenter.UserPresenter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,14 +19,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("auth")
 @Tag(name = "Autenticação", description = "Endpoints para cadastro e login de usuários")
 public class AuthenticationController {
-    private final CreateUserInputPort createUserInputPort;
-    private final LoginInputPort loginInputPort;
-    private final UserPresenter userPresenter;
 
-    public AuthenticationController(CreateUserInputPort createUserInputPort, LoginInputPort loginInputPort, UserPresenter userPresenter){
-        this.createUserInputPort = createUserInputPort;
-        this.loginInputPort = loginInputPort;
-        this.userPresenter = userPresenter;
+    private final UserService userService;
+
+    public AuthenticationController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/register")
@@ -43,14 +34,12 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "400", description = "Dados da requisição inválidos", content = @Content),
             @ApiResponse(responseCode = "409", description = "Conflito: E-mail já cadastrado", content = @Content)
     })
-    public ResponseEntity<CreateUserResponseDTO> createUser(@RequestBody CreateUserRequest request){
-        CreateUserCommand command = new CreateUserCommand(
+    public ResponseEntity<CreateUserResponseDTO> createUser(@RequestBody CreateUserRequest request) {
+        CreateUserResponseDTO response = userService.register(
                 request.getNickname(),
                 request.getEmail(),
                 request.getHashedPassword()
         );
-        User createdUser = createUserInputPort.execute(command);
-        CreateUserResponseDTO response = userPresenter.toCreateUserResponse(createdUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -63,13 +52,11 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "400", description = "Dados da requisição inválidos", content = @Content),
             @ApiResponse(responseCode = "401", description = "Credenciais inválidas / Senha incorreta", content = @Content)
     })
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequest request){
-        LoginCommand command = new LoginCommand(
-            request.getEmail(),
-            request.getPassword()
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequest request) {
+        LoginResponseDTO response = userService.login(
+                request.getEmail(),
+                request.getPassword()
         );
-        LoginOutput loginInfo = loginInputPort.execute(command);
-        LoginResponseDTO response = userPresenter.toLoginResponse(loginInfo);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

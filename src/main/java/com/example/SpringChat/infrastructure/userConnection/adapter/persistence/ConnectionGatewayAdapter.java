@@ -13,11 +13,13 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class ConnectionGatewayAdapter implements ConnectionGateway {
     private final SpringConnectionRepository springConnectionRepository;
     private final SpringUserRepository springUserRepository;
