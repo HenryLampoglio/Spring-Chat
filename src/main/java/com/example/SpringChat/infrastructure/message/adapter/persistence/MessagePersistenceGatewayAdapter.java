@@ -17,4 +17,9 @@ public class MessagePersistenceGatewayAdapter implements MessagePersistenceGatew
     public void saveMessage(Message message) {
         dynamoMessageRepository.save(message);
     }
+
+    @Override
+    public java.util.List<Message> findMessagesByChatId(java.util.UUID chatId, String beforeUlid, int limit) {
+        return dynamoMessageRepository.findMessagesByChatId(chatId, beforeUlid, limit);
+    }
 }

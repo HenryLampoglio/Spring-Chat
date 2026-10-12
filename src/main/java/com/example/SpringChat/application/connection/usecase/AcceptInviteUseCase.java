@@ -5,7 +5,7 @@ import com.example.SpringChat.application.connection.port.AcceptInvitePort;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.exception.ConnectionsNotFoundException;
 import com.example.SpringChat.core.connection.exception.ForbiddenAcceptInviteException;
-import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.application.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.enums.ConnectionStatus;
 
 public class AcceptInviteUseCase implements AcceptInvitePort {

@@ -6,7 +6,7 @@ import com.example.SpringChat.application.shared.request.PaginationRequest;
 import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.exception.InvitesSolicitationsNotFoundException;
-import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.application.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.enums.ConnectionStatus;
 
 public class GetInvitesReceivedUseCase implements InvitesReceivedInputPort {

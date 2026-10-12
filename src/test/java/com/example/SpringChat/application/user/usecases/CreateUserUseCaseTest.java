@@ -5,7 +5,7 @@ package com.example.SpringChat.application.user.usecases;
 import com.example.SpringChat.application.user.command.CreateUserCommand;
 import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.core.user.exception.UserEmailAlreadyExistsException;
-import com.example.SpringChat.core.user.gateway.UserGateway;
+import com.example.SpringChat.application.user.gateway.UserGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -24,9 +24,6 @@ class CreateUserUseCaseTest {
 
     @Mock
     private UserGateway userGateway;
-
-    @Mock
-    private BCryptPasswordEncoder passwordEncoder;
 
     @InjectMocks
     private CreateUserUseCase useCase;
@@ -40,23 +37,22 @@ class CreateUserUseCaseTest {
 
     @Test
     void shouldCreateUserSuccessfully() {
-        // Arrange (Configuração do cenário)
-        // Dizemos ao Mockito o que o mock deve fazer quando os métodos são chamados
+        // Arrange
         Mockito.when(userGateway.existsByEmail(any())).thenReturn(false);
         Mockito.when(userGateway.existsByPublicIdentificationKey(anyInt())).thenReturn(false);
-        Mockito.when(passwordEncoder.encode(any())).thenReturn("hashedPassword");
+        Mockito.when(userGateway.encodePassword(any())).thenReturn("hashedPassword");
         Mockito.when(userGateway.save(any(User.class))).thenReturn(new User(
                 "testuser", "test@email.com", "hashedPassword", 123456
         ));
 
-        // Act (Execução do código)
+        // Act
         User createdUser = useCase.execute(command);
 
-        // Assert (Verificação dos resultados)
+        // Assert
         Assertions.assertNotNull(createdUser);
         Assertions.assertEquals("testuser", createdUser.getNickname());
 
-        // Verificamos se os métodos do mock foram chamados o número de vezes correto
+        // Verify
         Mockito.verify(userGateway, Mockito.times(1)).existsByEmail(any());
         Mockito.verify(userGateway, Mockito.times(1)).save(any(User.class));
     }
@@ -71,7 +67,7 @@ class CreateUserUseCaseTest {
             useCase.execute(command);
         });
 
-        // Verificamos que o método save() nunca foi chamado neste caso
+        // Verify
         Mockito.verify(userGateway, Mockito.never()).save(any(User.class));
     }
 }

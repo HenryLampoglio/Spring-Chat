@@ -14,6 +14,15 @@ import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import com.example.SpringChat.infrastructure.userConnection.adapter.controller.presenter.ConnectionInfoPresenter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -25,6 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("connections")
+@Tag(name = "Conexões - Informações", description = "Endpoints para consulta de convites enviados, convites recebidos e lista de amigos")
+@SecurityRequirement(name = "bearerAuth")
 public class ConnectionInfoController {
     private final UserFriendsInputPort userFriendsInputPort;
     private final InvitesSentInputPort invitesSentInputPort;
@@ -44,8 +55,15 @@ public class ConnectionInfoController {
     }
 
     @GetMapping("/invites-sent")
+    @Operation(summary = "Listar convites de amizade enviados", description = "Retorna uma lista paginada dos convites de amizade enviados pelo usuário autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de convites enviados obtida com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     public ResponseEntity<PaginationResponseDTO<InvitesSentResponseDTO>> invitesSent(
+            @Parameter(hidden = true)
             @AuthenticationPrincipal UserEntity user,
+            @ParameterObject
             @PageableDefault(page = 0, size = 10) Pageable pageable
     )
     {
@@ -58,8 +76,15 @@ public class ConnectionInfoController {
     }
 
     @GetMapping("/invites-received")
+    @Operation(summary = "Listar convites de amizade recebidos", description = "Retorna uma lista paginada dos convites de amizade recebidos pelo usuário autenticado pendentes de resposta.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de convites recebidos obtida com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     public ResponseEntity<PaginationResponseDTO<InvitesReceivedResponseDTO>> invitesReceived(
+            @Parameter(hidden = true)
             @AuthenticationPrincipal UserEntity user,
+            @ParameterObject
             @PageableDefault(page = 0, size = 10) Pageable pageable
     )
     {
@@ -72,8 +97,15 @@ public class ConnectionInfoController {
     }
 
     @GetMapping("/friends")
+    @Operation(summary = "Listar amigos (conexões aceitas)", description = "Retorna uma lista paginada de todos os amigos conectados com o usuário autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de amigos obtida com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     public ResponseEntity<PaginationResponseDTO<UserFriendsResponseDTO>> userFriends(
+            @Parameter(hidden = true)
             @AuthenticationPrincipal UserEntity user,
+            @ParameterObject
             @PageableDefault(page = 0, size = 10) Pageable pageable
     )
     {

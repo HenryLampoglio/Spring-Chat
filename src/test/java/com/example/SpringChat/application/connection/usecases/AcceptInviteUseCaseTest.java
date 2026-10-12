@@ -5,8 +5,9 @@ import com.example.SpringChat.application.connection.command.AcceptInviteCommand
 import com.example.SpringChat.application.connection.usecase.AcceptInviteUseCase;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.exception.ConnectionsNotFoundException;
-import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.application.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.enums.ConnectionStatus;
+import com.example.SpringChat.core.user.entity.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,8 +34,14 @@ public class AcceptInviteUseCaseTest {
         UUID connectionId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
 
+        User receiver = new User();
+        receiver.setId(userId);
+        Connection connection = new Connection();
+        connection.setReceiver(receiver);
+
         //arrange
-        Mockito.when(connectionGateway.getInviteById(eq(connectionId), eq(ConnectionStatus.PENDING)));
+        Mockito.when(connectionGateway.getInviteById(eq(connectionId), eq(ConnectionStatus.PENDING)))
+                .thenReturn(Optional.of(connection));
         Mockito.when(connectionGateway.acceptInvite(eq(connectionId)))
                 .thenReturn(new Connection());
 
@@ -53,7 +60,8 @@ public class AcceptInviteUseCaseTest {
         UUID connectionId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         //arrange
-        Mockito.when(connectionGateway.getInviteById(eq(connectionId), eq(ConnectionStatus.PENDING)));
+        Mockito.when(connectionGateway.getInviteById(eq(connectionId), eq(ConnectionStatus.PENDING)))
+                .thenReturn(Optional.empty());
 
         //act
         AcceptInviteCommand command = new AcceptInviteCommand(connectionId, userId);

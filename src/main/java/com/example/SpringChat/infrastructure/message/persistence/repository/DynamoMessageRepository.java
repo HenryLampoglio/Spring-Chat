@@ -37,4 +37,39 @@ public class DynamoMessageRepository {
 
         dynamoDbClient.putItem(request);
     }
+
+    public java.util.List<Message> findMessagesByChatId(java.util.UUID chatId, String beforeUlid, int limit) {
+        String pk = "CHAT#" + chatId;
+        String condition;
+        Map<String, AttributeValue> expressionValues = new HashMap<>();
+        expressionValues.put(":pk", AttributeValue.builder().s(pk).build());
+
+        if (beforeUlid != null && !beforeUlid.isBlank()) {
+            condition = "PK = :pk AND SK < :beforeSk";
+            expressionValues.put(":beforeSk", AttributeValue.builder().s("MSG#" + beforeUlid).build());
+        } else {
+            condition = "PK = :pk AND begins_with(SK, :skPrefix)";
+            expressionValues.put(":skPrefix", AttributeValue.builder().s("MSG#").build());
+        }
+
+        software.amazon.awssdk.services.dynamodb.model.QueryRequest request = software.amazon.awssdk.services.dynamodb.model.QueryRequest.builder()
+                .tableName(tableName)
+                .keyConditionExpression(condition)
+                .expressionAttributeValues(expressionValues)
+                .scanIndexForward(false)
+                .limit(limit > 0 ? limit : 50)
+                .build();
+
+        software.amazon.awssdk.services.dynamodb.model.QueryResponse response = dynamoDbClient.query(request);
+        return response.items().stream()
+                .map(item -> new Message(
+                        item.get("SK").s().replace("MSG#", ""),
+                        chatId,
+                        java.util.UUID.fromString(item.get("senderId").s()),
+                        item.get("senderNickname").s(),
+                        item.get("content").s(),
+                        java.time.Instant.parse(item.get("sentAt").s())
+                ))
+                .toList();
+    }
 }

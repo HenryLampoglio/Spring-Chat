@@ -1,4 +1,4 @@
-package com.example.SpringChat.core.user.gateway;
+package com.example.SpringChat.application.user.gateway;
 
 import com.example.SpringChat.core.user.entity.User;
 
@@ -26,4 +26,5 @@ public interface UserGateway {
 
     String encodePassword(String password);
 
+    List<User> findByIds(List<UUID> ids);
 }

@@ -3,7 +3,7 @@ package com.example.SpringChat.application.user.usecases;
 import com.example.SpringChat.application.user.command.SearchUsersCommand;
 import com.example.SpringChat.application.user.port.SearchUsersInputPort;
 import com.example.SpringChat.core.user.entity.User;
-import com.example.SpringChat.core.user.gateway.UserGateway;
+import com.example.SpringChat.application.user.gateway.UserGateway;
 
 import java.util.List;
 import java.util.UUID;

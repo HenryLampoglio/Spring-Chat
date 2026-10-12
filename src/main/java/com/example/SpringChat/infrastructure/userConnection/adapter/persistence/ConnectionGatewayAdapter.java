@@ -2,7 +2,7 @@ package com.example.SpringChat.infrastructure.userConnection.adapter.persistence
 
 import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
-import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.application.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
 import com.example.SpringChat.core.enums.ConnectionStatus;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;

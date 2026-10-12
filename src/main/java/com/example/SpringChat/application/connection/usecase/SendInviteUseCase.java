@@ -4,10 +4,10 @@ import com.example.SpringChat.application.connection.command.SendInviteCommand;
 import com.example.SpringChat.application.connection.port.SendInvitePort;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.exception.DuplicatedUsersIdConnectionException;
-import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.application.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.core.enums.ConnectionStatus;
 import com.example.SpringChat.core.user.exception.UserNotFoundException;
-import com.example.SpringChat.core.user.gateway.UserGateway;
+import com.example.SpringChat.application.user.gateway.UserGateway;
 
 public class SendInviteUseCase implements SendInvitePort {
     private final ConnectionGateway connectionGateway;

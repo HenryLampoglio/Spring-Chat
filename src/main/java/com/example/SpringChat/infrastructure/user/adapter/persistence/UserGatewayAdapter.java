@@ -1,7 +1,7 @@
 package com.example.SpringChat.infrastructure.user.adapter.persistence;
 
 import com.example.SpringChat.core.user.entity.User;
-import com.example.SpringChat.core.user.gateway.UserGateway;
+import com.example.SpringChat.application.user.gateway.UserGateway;
 import com.example.SpringChat.infrastructure.security.TokenService;
 import com.example.SpringChat.infrastructure.user.persistence.entity.UserEntity;
 import com.example.SpringChat.infrastructure.user.persistence.repository.SpringUserRepository;
@@ -73,5 +73,12 @@ public class UserGatewayAdapter implements UserGateway {
     @Override
     public String encodePassword(String password){
      return passwordEncoder.encode(password);
+    }
+
+    @Override
+    public List<User> findByIds(List<UUID> ids) {
+        return springUserRepository.findAllById(ids).stream()
+                .map(UserEntity::toCoreUser)
+                .toList();
     }
 }

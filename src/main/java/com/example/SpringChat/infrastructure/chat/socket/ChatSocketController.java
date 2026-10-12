@@ -1,8 +1,7 @@
 package com.example.SpringChat.infrastructure.chat.socket;
 
-import com.example.SpringChat.application.chat.command.SendMessageCommand;
-import com.example.SpringChat.application.chat.port.SendMessageInputPort;
 import com.example.SpringChat.application.chat.requestDTO.SendMessageRequest;
+import com.example.SpringChat.application.chat.service.ChatService;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -15,23 +14,22 @@ import java.util.UUID;
 @Controller
 public class ChatSocketController {
 
-    private final SendMessageInputPort sendMessageInputPort;
+    private final ChatService chatService;
 
-    public ChatSocketController(SendMessageInputPort sendMessageInputPort) {
-        this.sendMessageInputPort = sendMessageInputPort;
+    public ChatSocketController(ChatService chatService) {
+        this.chatService = chatService;
     }
 
     @MessageMapping("/chat/{chatId}/send")
-    public void sendMessage(@DestinationVariable UUID chatId,
-                            SendMessageRequest message,
-                            SimpMessageHeaderAccessor headerAccessor,
-                            Principal principal) {
-
+    public void sendMessage(
+            @DestinationVariable UUID chatId,
+            SendMessageRequest message,
+            SimpMessageHeaderAccessor headerAccessor,
+            Principal principal
+    ) {
         UUID senderId = UUID.fromString(principal.getName());
-
         String nickname = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("nickname");
 
-        SendMessageCommand command = new SendMessageCommand(chatId, senderId, nickname, message.content());
-        sendMessageInputPort.execute(command);
+        chatService.sendMessage(chatId, senderId, nickname, message.content());
     }
 }

@@ -2,12 +2,10 @@ package com.example.SpringChat.application.user.usecases;
 
 import com.example.SpringChat.application.user.command.LoginCommand;
 import com.example.SpringChat.application.user.output.LoginOutput;
-import com.example.SpringChat.application.user.responseDTO.LoginResponseDTO;
 import com.example.SpringChat.core.user.entity.User;
 import com.example.SpringChat.core.user.exception.PasswordsDoesntMatchesException;
 import com.example.SpringChat.core.user.exception.UserEmailNotFoundException;
-import com.example.SpringChat.core.user.gateway.UserGateway;
-import com.example.SpringChat.infrastructure.security.TokenService;
+import com.example.SpringChat.application.user.gateway.UserGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,24 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 class LoginUseCaseTest {
 
     @Mock
     private UserGateway userGateway;
-
-    @Mock
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Mock
-    private TokenService tokenService;
 
     @InjectMocks
     private LoginUseCase useCase;
@@ -53,9 +43,9 @@ class LoginUseCaseTest {
     void shouldReturnTokenSuccessfully() {
         Mockito.when(userGateway.findByEmail(command.Email()))
                 .thenReturn(Optional.of(foundUser));
-        Mockito.when(passwordEncoder.matches(command.password(), foundUser.getHashedPassword()))
+        Mockito.when(userGateway.validatePassword(command.password(), foundUser.getHashedPassword()))
                 .thenReturn(true);
-        Mockito.when(tokenService.generateToken(foundUser))
+        Mockito.when(userGateway.generateAuthToken(foundUser))
                 .thenReturn("generated-jwt-token");
 
         LoginOutput userAuth = useCase.execute(command);
@@ -81,7 +71,7 @@ class LoginUseCaseTest {
         Mockito.when(userGateway.findByEmail(command.Email()))
                 .thenReturn(Optional.of(foundUser));
 
-        Mockito.when(passwordEncoder.matches(command.password(), foundUser.getHashedPassword()))
+        Mockito.when(userGateway.validatePassword(command.password(), foundUser.getHashedPassword()))
                 .thenReturn(false);
 
         Assertions.assertThrows(PasswordsDoesntMatchesException.class, () -> {

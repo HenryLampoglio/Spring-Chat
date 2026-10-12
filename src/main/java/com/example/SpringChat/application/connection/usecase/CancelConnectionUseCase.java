@@ -3,7 +3,7 @@ package com.example.SpringChat.application.connection.usecase;
 import com.example.SpringChat.application.connection.command.CancelConnectionCommand;
 import com.example.SpringChat.application.connection.port.CancelConnectionPort;
 import com.example.SpringChat.core.connection.exception.ConnectionsNotFoundException;
-import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.application.connection.gateway.ConnectionGateway;
 
 public class CancelConnectionUseCase implements CancelConnectionPort {
     private final ConnectionGateway connectionGateway;

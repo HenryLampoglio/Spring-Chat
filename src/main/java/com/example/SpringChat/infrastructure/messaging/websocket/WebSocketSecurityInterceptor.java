@@ -1,7 +1,6 @@
 package com.example.SpringChat.infrastructure.messaging.websocket;
 
-import com.example.SpringChat.application.chat.command.ValidateChatAccessCommand;
-import com.example.SpringChat.application.chat.port.ValidateChatAccessInputPort;
+import com.example.SpringChat.application.chat.service.ChatService;
 import com.example.SpringChat.infrastructure.security.TokenService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class WebSocketSecurityInterceptor implements ChannelInterceptor {
 
     private static final String BEARER_PREFIX = "Bearer ";
     private final TokenService tokenService;
-    private final ValidateChatAccessInputPort validateChatAccessInputPort;
+    private final ChatService chatService;
 
     @Override
     public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
@@ -75,8 +74,7 @@ public class WebSocketSecurityInterceptor implements ChannelInterceptor {
 
         try {
             String roomId = extractChatId(accessor.getDestination());
-            ValidateChatAccessCommand command = new ValidateChatAccessCommand(user.getName(), roomId);
-            validateChatAccessInputPort.execute(command);
+            chatService.validateChatAccess(user.getName(), roomId);
         } catch (Exception e) {
             throw new MessageDeliveryException("Falha ao entrar na sala: " + e.getMessage());
         }

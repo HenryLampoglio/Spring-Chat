@@ -5,7 +5,7 @@ import com.example.SpringChat.application.connection.port.UserFriendsInputPort;
 import com.example.SpringChat.application.shared.response.PaginationResponseDTO;
 import com.example.SpringChat.core.connection.entity.Connection;
 import com.example.SpringChat.core.connection.exception.ConnectionsNotFoundException;
-import com.example.SpringChat.core.connection.gateway.ConnectionGateway;
+import com.example.SpringChat.application.connection.gateway.ConnectionGateway;
 import com.example.SpringChat.application.shared.request.PaginationRequest;
 
 import java.util.UUID;

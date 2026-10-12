@@ -1,0 +1,414 @@
+{
+	"info": {
+		"_postman_id": "a7b8c9d0-1234-5678-9abc-def012345678",
+		"name": "SpringChat API",
+		"description": "Coleção de requisições REST para teste da API do SpringChat (Autenticação, Usuários, Chats e Conexões).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearerToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "bearerToken",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "🔑 Autenticação",
+			"item": [
+				{
+					"name": "Registrar Usuário",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nickname\": \"joaodev\",\n  \"email\": \"joao@email.com\",\n  \"hashedPassword\": \"SenhaSegura123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Cadastra um novo usuário no sistema."
+					},
+					"response": []
+				},
+				{
+					"name": "Login de Usuário",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData && jsonData.token) {",
+									"        pm.collectionVariables.set(\"bearerToken\", jsonData.token);",
+									"        console.log(\"Token JWT capturado e salvo na variável bearerToken!\");",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"joao@email.com\",\n  \"Password\": \"SenhaSegura123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Autentica o usuário. Ao ter sucesso, o token JWT retornado é automaticamente salvo na variável 'bearerToken' para autenticar as demais requisições."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👤 Usuários",
+			"item": [
+				{
+					"name": "Buscar Usuários",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/search?userIdentifier=joao",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"search"
+							],
+							"query": [
+								{
+									"key": "userIdentifier",
+									"value": "joao",
+									"description": "Nome ou identificador do usuário para busca"
+								}
+							]
+						},
+						"description": "Busca usuários cadastrados pelo nome/nickname ou identificador."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💬 Chats",
+			"item": [
+				{
+					"name": "Buscar ou Criar Chat Privado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/:targetUserId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								":targetUserId"
+							],
+							"variable": [
+								{
+									"key": "targetUserId",
+									"value": "00000000-0000-0000-0000-000000000000",
+									"description": "UUID do usuário de destino"
+								}
+							]
+						},
+						"description": "Retorna o ID do chat direto existente com o usuário de destino ou cria um novo."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Conversas da Sidebar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/sidebar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"sidebar"
+							]
+						},
+						"description": "Retorna a lista de conversas recentes do usuário autenticado ordenadas pela última mensagem."
+					},
+					"response": []
+				},
+				{
+					"name": "Histórico de Mensagens do Chat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/:chatId/messages?limit=50",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								":chatId",
+								"messages"
+							],
+							"variable": [
+								{
+									"key": "chatId",
+									"value": "00000000-0000-0000-0000-000000000000",
+									"description": "UUID do chat"
+								}
+							],
+							"query": [
+								{
+									"key": "before",
+									"value": "",
+									"description": "ULID da mensagem mais antiga já carregada para cursor pagination (opcional)"
+								},
+								{
+									"key": "limit",
+									"value": "50",
+									"description": "Quantidade máxima de mensagens a retornar"
+								}
+							]
+						},
+						"description": "Retorna o histórico de mensagens de uma conversa com paginação reversa ordenada via ULID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🤝 Conexões - Ações",
+			"item": [
+				{
+					"name": "Enviar Convite de Amizade",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/connections/send-invite/:receiverId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"connections",
+								"send-invite",
+								":receiverId"
+							],
+							"variable": [
+								{
+									"key": "receiverId",
+									"value": "00000000-0000-0000-0000-000000000000",
+									"description": "UUID do usuário recebedor do convite"
+								}
+							]
+						},
+						"description": "Envia um convite de amizade/conexão para outro usuário."
+					},
+					"response": []
+				},
+				{
+					"name": "Aceitar Convite de Amizade",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/connections/accept-invite/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"connections",
+								"accept-invite",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "00000000-0000-0000-0000-000000000000",
+									"description": "UUID da solicitação de conexão"
+								}
+							]
+						},
+						"description": "Aceita um convite de amizade recebido."
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar Convite ou Desfazer Amizade",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/connections/cancel-connection/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"connections",
+								"cancel-connection",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "00000000-0000-0000-0000-000000000000",
+									"description": "UUID da conexão a ser desfeita/cancelada"
+								}
+							]
+						},
+						"description": "Cancela um convite pendente ou encerra uma conexão de amizade."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ℹ️ Conexões - Informações",
+			"item": [
+				{
+					"name": "Listar Convites Enviados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/connections/invites-sent?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"connections",
+								"invites-sent"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Lista paginada de convites de amizade que foram enviados pelo usuário logado."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Convites Recebidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/connections/invites-received?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"connections",
+								"invites-received"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Lista paginada de convites de amizade recebidos pendentes de aceite."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Amigos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/connections/friends?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"connections",
+								"friends"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Lista paginada de todos os amigos (conexões aceitas) do usuário logado."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
